@@ -37,12 +37,19 @@ import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../sh
            <!-- Git-style timeline container -->
            <div class="relative">
              
-             <!-- Vertical timeline line - hidden on mobile, visible on larger screens -->
-             <div class="hidden sm:block absolute left-8 top-0 bottom-0 flex flex-col">
-               <!-- Main timeline line -->
-               <div [class]="'absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-400 to-orange-600 transition-all duration-500 ' + 
-                 (hoveredExperience ? 'opacity-100 shadow-lg shadow-orange-500/50' : 'opacity-30')"></div>
-             </div>
+                           <!-- Vertical timeline line - hidden on mobile, visible on larger screens -->
+              <div class="hidden sm:block absolute left-8 top-0 bottom-0 flex flex-col">
+                <!-- Main timeline line -->
+                <div 
+                  [ngClass]="{
+                    'timeline-line-active': hoveredExperience,
+                    'timeline-line-default': !hoveredExperience
+                  }"
+                  [style.background]="hoveredBranchColor ? hoveredBranchColor : 'linear-gradient(to bottom, #4ade80, #16a34a)'"
+                  [style.box-shadow]="hoveredBranchColor ? '0 10px 15px -3px rgba(0,0,0,0.3)' : 'none'"
+                  class="absolute left-0 top-0 bottom-0 w-1 transition-all duration-500">
+                </div>
+              </div>
              
              <!-- Experience cards positioned as Git commits -->
              <div class="space-y-6 sm:space-y-8 sm:ml-16">
@@ -53,13 +60,13 @@ import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../sh
                  
                  <!-- Experience card as feature branch -->
                  <div class="flex-1 relative">
-                   <!-- Animated arrow on hover - hidden on mobile -->
-                   <div 
-                     class="hidden sm:block absolute -left-4 top-1/2 w-0 h-1.5 transition-all duration-700 ease-out opacity-0"
-                     [class.arrow-active]="hoveredExperience === exp.id"
-                     [style.background]="exp.branchColor"
-                     [style.transform]="'translateY(-50%)'">
-                   </div>
+                                       <!-- Animated branch line from middle - hidden on mobile -->
+                    <div 
+                      class="hidden sm:block absolute -left-4 top-1/2 w-0 h-1.5 transition-all duration-700 ease-out opacity-0"
+                      [class.arrow-active]="hoveredExperience === exp.id"
+                      [style.background]="exp.branchColor"
+                      [style.transform]="'translateY(-50%)'">
+                    </div>
                    
                    <app-card 
                      class="bg-card-gradient border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer relative"
@@ -130,32 +137,57 @@ import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../sh
        </div>
      </section>
    `,
-  styles: [`
-    .arrow-active {
-      width: 2rem !important;
-      opacity: 1 !important;
-    }
-    
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-fade-in {
-      animation: fade-in 0.6s ease-out forwards;
-    }
-  `]
+     styles: [`
+     .timeline-line-default {
+       opacity: 0.3;
+     }
+     
+     .timeline-line-active {
+       opacity: 1;
+     }
+     
+     .arrow-active {
+       width: 2rem !important;
+       opacity: 1 !important;
+       animation: branch-connect 0.7s ease-out forwards;
+     }
+     
+     @keyframes branch-connect {
+       0% {
+         width: 0;
+         opacity: 0;
+       }
+       50% {
+         width: 1rem;
+         opacity: 0.7;
+       }
+       100% {
+         width: 2rem;
+         opacity: 1;
+       }
+     }
+     
+     @keyframes fade-in {
+       from {
+         opacity: 0;
+         transform: translateY(20px);
+       }
+       to {
+         opacity: 1;
+         transform: translateY(0);
+       }
+     }
+     
+     .animate-fade-in {
+       animation: fade-in 0.6s ease-out forwards;
+     }
+   `]
 })
 export class ExperienceTimelineComponent implements OnInit {
   hoveredExperience: string | null = null;
   config: ExperienceConfig | null = null;
   experiences: ExperiencePosition[] = [];
+  hoveredBranchColor: string | null = null;
 
   constructor(private configService: AppConfigService) {}
 
@@ -331,11 +363,19 @@ export class ExperienceTimelineComponent implements OnInit {
   onExperienceHover(experienceId: string) {
     console.log(`🖱️ Hover started on experience:`, experienceId);
     this.hoveredExperience = experienceId;
+    
+    // Find the experience and get its branch color
+    const experience = this.experiences.find(exp => exp.id === experienceId);
+    if (experience) {
+      this.hoveredBranchColor = experience.branchColor;
+      console.log(`🎨 Branch color for hover:`, this.hoveredBranchColor);
+    }
   }
 
   onExperienceLeave() {
     console.log(`🖱️ Hover ended`);
     this.hoveredExperience = null;
+    this.hoveredBranchColor = null;
   }
 
   getBranchName(company: string): string {
