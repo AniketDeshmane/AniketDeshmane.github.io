@@ -11,125 +11,125 @@ import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../sh
   standalone: true,
   imports: [CommonModule, CardComponent, BadgeComponent, NgIconComponent],
   viewProviders: [provideIcons({ lucideBuilding, lucideCalendar, lucideMapPin, lucideGitBranch, lucideGitMerge, lucideGitCommit })],
-  template: `
-    <section id="experience" class="py-20 bg-background">
-      <div class="container mx-auto px-4">
-                 <div class="text-center mb-16">
-           <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
+     template: `
+     <section id="experience" class="py-12 sm:py-16 lg:py-20 bg-background">
+       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+         <div class="text-center mb-12 sm:mb-16">
+           <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
              {{ config?.title || 'Professional Experience' }}
            </h2>
-           <p class="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
+           <p class="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
              {{ config?.subtitle || 'A journey through my professional growth and key contributions' }}
            </p>
            
            <!-- Experience Summary -->
-           <div class="bg-muted/20 border border-border rounded-lg p-6 max-w-2xl mx-auto">
-             <div class="text-lg font-semibold text-foreground mb-2">
+           <div class="bg-muted/20 border border-border rounded-lg p-4 sm:p-6 max-w-2xl mx-auto mx-4">
+             <div class="text-base sm:text-lg font-semibold text-foreground mb-2">
                {{ getTotalExperienceText() }}
              </div>
-             <div class="text-sm text-muted-foreground">
+             <div class="text-xs sm:text-sm text-muted-foreground">
                {{ getFeatureBranchesText() }}
              </div>
            </div>
          </div>
 
-        <div class="max-w-6xl mx-auto relative">
-          <!-- Git-style timeline container -->
-          <div class="relative">
-            
-            <!-- Vertical timeline line -->
-            <div class="absolute left-8 top-0 bottom-0 flex flex-col">
-              <!-- Main timeline line -->
-              <div [class]="'absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-400 to-orange-600 transition-all duration-500 ' + 
-                (hoveredExperience ? 'opacity-100 shadow-lg shadow-orange-500/50' : 'opacity-30')"></div>
-            </div>
-            
-            <!-- Experience cards positioned as Git commits -->
-            <div class="space-y-8 ml-16">
-              <div 
-                *ngFor="let exp of experiences; let i = index"
-                class="relative flex items-start gap-8 animate-fade-in"
-                [style.animation-delay.s]="i * 0.3">
-                
-                <!-- Experience card as feature branch -->
-                <div class="flex-1 relative">
-                  <!-- Animated arrow on hover -->
-                  <div 
-                    class="absolute -left-4 top-1/2 w-0 h-1.5 transition-all duration-700 ease-out opacity-0"
-                    [class.arrow-active]="hoveredExperience === exp.id"
-                    [style.background]="exp.branchColor"
-                    [style.transform]="'translateY(-50%)'">
-                  </div>
-                  
-                  <app-card 
-                    class="bg-card-gradient border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer relative"
-                    (mouseenter)="onExperienceHover(exp.id)"
-                    (mouseleave)="onExperienceLeave()">
-                    
-                    <!-- Floating merge message -->
-                    <div 
-                      *ngIf="hoveredExperience === exp.id"
-                      class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 border border-green-400/30 rounded-lg px-4 py-3 text-xs font-mono text-white shadow-xl animate-fade-in z-30">
-                      <div class="flex items-center gap-2">
-                        <ng-icon name="lucideGitMerge" size="14" class="text-green-100"></ng-icon>
-                        <span class="font-semibold">{{ getMergeMessage(exp) }}</span>
-                      </div>
-                    </div>
-                    
-                    <div class="p-6">
-                      <!-- Git commit header -->
-                      <div class="flex items-center gap-2 mb-3">
-                        <ng-icon name="lucideGitCommit" size="16" class="text-primary"></ng-icon>
-                        <span class="text-xs text-muted-foreground font-mono">commit {{ exp.id }}</span>
-                        <ng-icon name="lucideGitBranch" size="16" [style.color]="exp.branchColor"></ng-icon>
-                        <span class="text-xs font-mono" [style.color]="exp.branchColor">feature/{{ getBranchName(exp.company) }}</span>
-                      </div>
-                      
-                      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
-                        <h3 class="text-xl text-foreground flex items-center gap-2 font-semibold">
-                          <ng-icon name="lucideBuilding" size="20" class="text-primary"></ng-icon>
-                          {{ exp.company }}
-                        </h3>
-                        <app-badge 
-                          *ngIf="exp.current" 
-                          class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-3 py-1 rounded-full shadow-sm border border-green-400/20">
-                          Current
-                        </app-badge>
-                      </div>
-                      
-                      <div class="text-primary font-semibold text-lg mb-2">
-                        {{ exp.position }}
-                      </div>
-                      
-                      <div class="flex flex-col sm:flex-row gap-2 text-sm text-muted-foreground mb-4">
-                        <div class="flex items-center gap-1">
-                          <ng-icon name="lucideCalendar" size="16"></ng-icon>
-                          {{ exp.duration }}
-                        </div>
-                        <div class="flex items-center gap-1">
-                          <ng-icon name="lucideMapPin" size="16"></ng-icon>
-                          {{ exp.location }}
-                        </div>
-                      </div>
-                      
-                      <ul class="space-y-2">
-                        <li 
-                          *ngFor="let desc of exp.description"
-                          class="text-muted-foreground flex items-start gap-2">
-                          <div class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                          {{ desc }}
-                        </li>
-                      </ul>
-                    </div>
-                  </app-card>
-                </div>
-              </div>
-            </div>
-          </div>
+         <div class="max-w-6xl mx-auto relative">
+           <!-- Git-style timeline container -->
+           <div class="relative">
+             
+             <!-- Vertical timeline line - hidden on mobile, visible on larger screens -->
+             <div class="hidden sm:block absolute left-8 top-0 bottom-0 flex flex-col">
+               <!-- Main timeline line -->
+               <div [class]="'absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-400 to-orange-600 transition-all duration-500 ' + 
+                 (hoveredExperience ? 'opacity-100 shadow-lg shadow-orange-500/50' : 'opacity-30')"></div>
+             </div>
+             
+             <!-- Experience cards positioned as Git commits -->
+             <div class="space-y-6 sm:space-y-8 sm:ml-16">
+               <div 
+                 *ngFor="let exp of experiences; let i = index"
+                 class="relative flex items-start gap-4 sm:gap-8 animate-fade-in"
+                 [style.animation-delay.s]="i * 0.3">
+                 
+                 <!-- Experience card as feature branch -->
+                 <div class="flex-1 relative">
+                   <!-- Animated arrow on hover - hidden on mobile -->
+                   <div 
+                     class="hidden sm:block absolute -left-4 top-1/2 w-0 h-1.5 transition-all duration-700 ease-out opacity-0"
+                     [class.arrow-active]="hoveredExperience === exp.id"
+                     [style.background]="exp.branchColor"
+                     [style.transform]="'translateY(-50%)'">
+                   </div>
+                   
+                   <app-card 
+                     class="bg-card-gradient border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer relative"
+                     (mouseenter)="onExperienceHover(exp.id)"
+                     (mouseleave)="onExperienceLeave()">
+                     
+                     <!-- Floating merge message - adjusted for mobile -->
+                     <div 
+                       *ngIf="hoveredExperience === exp.id"
+                       class="absolute -top-10 sm:-top-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 border border-green-400/30 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs font-mono text-white shadow-xl animate-fade-in z-30 max-w-[90vw] sm:max-w-none">
+                       <div class="flex items-center gap-1 sm:gap-2">
+                         <ng-icon name="lucideGitMerge" size="12" class="sm:text-sm text-green-100"></ng-icon>
+                         <span class="font-semibold text-xs sm:text-sm">{{ getMergeMessage(exp) }}</span>
+                       </div>
+                     </div>
+                     
+                     <div class="p-4 sm:p-6">
+                       <!-- Git commit header - simplified on mobile -->
+                       <div class="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-wrap">
+                         <ng-icon name="lucideGitCommit" size="14" class="sm:text-base text-primary"></ng-icon>
+                         <span class="text-xs text-muted-foreground font-mono hidden sm:inline">commit {{ exp.id }}</span>
+                         <ng-icon name="lucideGitBranch" size="14" class="sm:text-base" [style.color]="exp.branchColor"></ng-icon>
+                         <span class="text-xs font-mono hidden sm:inline" [style.color]="exp.branchColor">feature/{{ getBranchName(exp.company) }}</span>
+                       </div>
+                       
+                       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 sm:mb-3">
+                         <h3 class="text-lg sm:text-xl text-foreground flex items-center gap-2 font-semibold">
+                           <ng-icon name="lucideBuilding" size="18" class="sm:text-xl text-primary"></ng-icon>
+                           <span class="break-words">{{ exp.company }}</span>
+                         </h3>
+                         <app-badge 
+                           *ngIf="exp.current" 
+                           class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-2 sm:px-3 py-1 rounded-full shadow-sm border border-green-400/20 text-xs sm:text-sm self-start sm:self-auto">
+                           Current
+                         </app-badge>
+                       </div>
+                       
+                       <div class="text-primary font-semibold text-base sm:text-lg mb-2">
+                         {{ exp.position }}
+                       </div>
+                       
+                       <div class="flex flex-col gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+                         <div class="flex items-center gap-1">
+                           <ng-icon name="lucideCalendar" size="14" class="sm:text-base"></ng-icon>
+                           <span class="break-words">{{ exp.duration }}</span>
+                         </div>
+                         <div class="flex items-center gap-1">
+                           <ng-icon name="lucideMapPin" size="14" class="sm:text-base"></ng-icon>
+                           <span class="break-words">{{ exp.location }}</span>
+                         </div>
+                       </div>
+                       
+                       <ul class="space-y-1 sm:space-y-2">
+                         <li 
+                           *ngFor="let desc of exp.description"
+                           class="text-muted-foreground flex items-start gap-2 text-sm sm:text-base">
+                           <div class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                           <span class="break-words">{{ desc }}</span>
+                         </li>
+                       </ul>
+                     </div>
+                   </app-card>
                  </div>
+               </div>
+             </div>
+           </div>
+         </div>
        </div>
      </section>
-  `,
+   `,
   styles: [`
     .arrow-active {
       width: 2rem !important;
