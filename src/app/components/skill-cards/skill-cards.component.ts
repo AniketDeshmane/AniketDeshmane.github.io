@@ -9,7 +9,8 @@ import {
   lucideSmartphone, 
   lucideBarChart3,
   lucideMessageSquare,
-  lucideSearch
+  lucideSearch,
+  lucideArrowLeft
 } from '@ng-icons/lucide';
 import { CardComponent } from '../ui/card/card.component';
 
@@ -35,7 +36,8 @@ interface Skill {
     lucideSmartphone, 
     lucideBarChart3,
     lucideMessageSquare,
-    lucideSearch
+    lucideSearch,
+    lucideArrowLeft
   })],
   template: `
     <section class="py-20 bg-muted/20">
@@ -56,14 +58,15 @@ interface Skill {
             [style.animation-delay.s]="i * 0.1">
             
             <div
-              [class]="'relative w-full h-full cursor-pointer transition-transform duration-700 transform-style-preserve-3d ' + 
-                (flippedCards.has(i) ? 'rotate-y-180' : '')"
+              class="relative w-full h-full cursor-pointer"
               (click)="handleCardClick(i)">
               
               <!-- Front of card -->
-              <app-card class="absolute inset-0 backface-hidden bg-card-gradient border-border hover:border-primary/50 transition-all duration-300">
+              <app-card 
+                [class]="'absolute inset-0 bg-card-gradient border-border hover:border-primary/50 transition-all duration-300 ' + 
+                  (flippedCards.has(i) ? 'opacity-0 pointer-events-none' : 'opacity-100')">
                 <div class="flex flex-col items-center justify-center h-full text-center p-6">
-                  <div [class]="'mb-4 p-4 rounded-full bg-gradient-to-r text-white ' + skill.color">
+                  <div [class]="'mb-4 p-4 rounded-full bg-gradient-to-r text-white flex items-center justify-center w-16 h-16 ' + skill.color">
                     <ng-icon [name]="skill.icon" size="32"></ng-icon>
                   </div>
                   <h3 class="text-xl font-bold text-foreground mb-2">
@@ -76,42 +79,33 @@ interface Skill {
               </app-card>
 
               <!-- Back of card -->
-              <app-card class="absolute inset-0 backface-hidden rotate-y-180 bg-card-gradient border-primary/50">
-                <div class="flex flex-col justify-center h-full p-6 overflow-y-auto">
-                  <div [class]="'mb-3 p-2 rounded-full bg-gradient-to-r text-white w-fit mx-auto ' + skill.color">
+              <app-card 
+                [class]="'absolute inset-0 bg-card-gradient border-primary/50 transition-all duration-300 ' + 
+                  (flippedCards.has(i) ? 'opacity-100' : 'opacity-0 pointer-events-none')">
+                <div class="flex flex-col justify-center h-full p-6">
+                  <div [class]="'mb-3 p-2 rounded-full bg-gradient-to-r text-white flex items-center justify-center w-12 h-12 mx-auto ' + skill.color">
                     <ng-icon [name]="skill.icon" size="24"></ng-icon>
                   </div>
-                  <h3 class="text-lg font-bold text-center text-foreground mb-2">
+                  <h3 class="text-lg font-bold text-center text-foreground mb-4">
                     {{ skill.category }}
                   </h3>
-                  <p class="text-xs text-primary font-medium text-center mb-2">
-                    {{ skill.experience }} Experience
-                  </p>
-                  <p class="text-xs text-muted-foreground text-center mb-4 leading-relaxed">
-                    {{ skill.description }}
-                  </p>
                   
-                  <div class="space-y-3">
-                    <h4 class="text-sm font-semibold text-foreground">Key Highlights:</h4>
-                    <ul class="space-y-1.5">
-                      <li 
-                        *ngFor="let highlight of skill.highlights"
-                        class="text-xs text-muted-foreground flex items-start gap-2 leading-relaxed">
-                        <div class="w-1 h-1 bg-skill-accent rounded-full mt-1.5 flex-shrink-0"></div>
-                        {{ highlight }}
-                      </li>
-                    </ul>
-                  </div>
+                  <ul class="space-y-2 mb-6">
+                    <li 
+                      *ngFor="let skillName of skill.skills"
+                      class="text-sm text-muted-foreground flex items-start gap-2 leading-relaxed">
+                      <div class="w-1.5 h-1.5 bg-skill-accent rounded-full mt-1.5 flex-shrink-0"></div>
+                      {{ skillName }}
+                    </li>
+                  </ul>
                   
-                  <div class="mt-4 pt-3 border-t border-border/50">
-                    <h4 class="text-sm font-semibold text-foreground mb-2">Technologies:</h4>
-                    <div class="flex flex-wrap gap-1">
-                      <span 
-                        *ngFor="let skillName of skill.skills"
-                        class="text-xs bg-muted/50 text-muted-foreground px-2 py-1 rounded-full">
-                        {{ skillName }}
-                      </span>
-                    </div>
+                  <div class="mt-auto text-center">
+                    <button 
+                      class="text-xs text-primary hover:text-primary/80 transition-colors flex items-center mx-auto"
+                      (click)="$event.stopPropagation(); handleCardClick(i)">
+                      <ng-icon name="lucideArrowLeft" size="14" class="mr-1"></ng-icon>
+                      Back
+                    </button>
                   </div>
                 </div>
               </app-card>
