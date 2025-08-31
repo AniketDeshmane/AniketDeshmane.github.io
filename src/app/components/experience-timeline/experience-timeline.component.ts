@@ -45,7 +45,7 @@ import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../sh
                 <div class="flex-1 relative">
                   <!-- Animated arrow on hover -->
                   <div 
-                    class="absolute -left-4 top-1/2 w-0 h-0.5 transition-all duration-700 ease-out opacity-0"
+                    class="absolute -left-4 top-1/2 w-0 h-1.5 transition-all duration-700 ease-out opacity-0"
                     [class.arrow-active]="hoveredExperience === exp.id"
                     [style.background]="exp.branchColor"
                     [style.transform]="'translateY(-50%)'">
@@ -160,53 +160,64 @@ export class ExperienceTimelineComponent implements OnInit {
 
   ngOnInit() {
     this.config = this.configService.getExperienceConfig();
-    this.experiences = this.config.positions;
+    this.experiences = this.config.positions.map(exp => ({
+      ...exp,
+      current: !exp.endDate, // Dynamic: true if no endDate, false if endDate exists
+      experienceYears: this.calculateExperienceYears(exp),
+      experienceMonths: this.calculateExperienceMonths(exp)
+    }));
   }
 
   get totalExperienceYears(): number {
-    return this.experiences.reduce((total, exp) => total + this.getExperienceYears(exp), 0);
+    const totalMonths = this.experiences.reduce((total, exp) => total + this.getExperienceMonths(exp), 0);
+    return Math.floor(totalMonths / 12);
   }
 
   get totalExperienceMonths(): number {
-    return this.experiences.reduce((total, exp) => total + this.getExperienceMonths(exp), 0);
+    const totalMonths = this.experiences.reduce((total, exp) => total + this.getExperienceMonths(exp), 0);
+    return totalMonths % 12;
+  }
+
+  calculateExperienceYears(exp: ExperiencePosition): number {
+    const endDate = exp.endDate || new Date(); // Use current date if no endDate (current position)
+    const startDate = exp.startDate;
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const totalMonths = Math.floor(diffDays / 30.44); // Average days per month
+    const years = Math.floor(totalMonths / 12);
+    return years;
+  }
+
+  calculateExperienceMonths(exp: ExperiencePosition): number {
+    const endDate = exp.endDate || new Date(); // Use current date if no endDate (current position)
+    const startDate = exp.startDate;
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const totalMonths = Math.floor(diffDays / 30.44); // Average days per month
+    return totalMonths;
   }
 
   getExperienceYears(exp: ExperiencePosition): number {
-    if (exp.current) {
-      // Calculate dynamic duration for current position
-      const endDate = new Date();
-      const startDate = exp.startDate;
-      const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      const years = Math.floor(diffDays / 365);
-      return years;
-    }
-    return exp.experienceYears;
+    return this.calculateExperienceYears(exp);
   }
 
   getExperienceMonths(exp: ExperiencePosition): number {
-    if (exp.current) {
-      // Calculate dynamic duration for current position
-      const endDate = new Date();
-      const startDate = exp.startDate;
-      const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      const totalMonths = Math.floor(diffDays / 30.44); // Average days per month
-      const years = Math.floor(diffDays / 365);
-      const months = totalMonths - (years * 12);
-      return months;
-    }
-    return exp.experienceMonths;
+    return this.calculateExperienceMonths(exp);
   }
 
   getMergeMessage(exp: ExperiencePosition): string {
+    // Calculate years and months properly
+    const totalMonths = this.getExperienceMonths(exp);
+    const years = Math.floor(totalMonths / 12);
+    const months = totalMonths % 12;
+    
     if (!this.config?.timeline.mergeMessage) {
-      return `Merging ${this.getExperienceYears(exp)}y ${this.getExperienceMonths(exp)}m to main career`;
+      return `Merging ${years}y ${months}m to career`;
     }
     
     return this.config.timeline.mergeMessage
-      .replace('{years}', this.getExperienceYears(exp).toString())
-      .replace('{months}', this.getExperienceMonths(exp).toString());
+      .replace('{years}', years.toString())
+      .replace('{months}', months.toString());
   }
 
   getTotalExperienceText(): string {
@@ -220,12 +231,19 @@ export class ExperienceTimelineComponent implements OnInit {
   }
 
   getFeatureBranchesText(): string {
-    if (!this.config?.timeline.featureBranches) {
-      return `${this.experiences.length} feature branches merged into main career`;
-    }
+    // Count completed positions (inactive/merged)
+    const completedPositions = this.experiences.filter(exp => !exp.current);
+    const completedCount = completedPositions.length;
     
-    return this.config.timeline.featureBranches
-      .replace('{count}', this.experiences.length.toString());
+    // Count current positions (in progress)
+    const currentPositions = this.experiences.filter(exp => exp.current);
+    const currentCount = currentPositions.length;
+    
+    if (currentCount > 0) {
+      return `${completedCount} feature branches merged into career, ${currentCount} in progress`;
+    } else {
+      return `${completedCount} feature branches merged into career`;
+    }
   }
 
   onExperienceHover(experienceId: string) {

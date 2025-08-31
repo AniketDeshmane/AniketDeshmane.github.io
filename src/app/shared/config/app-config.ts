@@ -47,12 +47,12 @@ export interface ExperiencePosition {
   duration: string;
   location: string;
   description: string[];
-  current: boolean;
+  current?: boolean; // Optional - will be calculated dynamically
   startDate: Date;
   endDate?: Date;
   branchColor: string;
-  experienceYears: number;
-  experienceMonths: number;
+  experienceYears?: number; // Optional - will be calculated dynamically
+  experienceMonths?: number; // Optional - will be calculated dynamically
 }
 
 export interface ExperienceTimelineConfig {
@@ -230,9 +230,9 @@ export class AppConfigService {
       timeline: {
         title: "Career Git History",
         subtitle: "My professional journey visualized as Git commits and feature branches",
-        mergeMessage: "Merging {years}y {months}m to main career",
+        mergeMessage: "Merging {years}y {months}m to career",
         totalExperience: "Total Career Experience: {years}y {months}m",
-        featureBranches: "{count} feature branches merged into main career"
+        featureBranches: "{count} feature branches merged into career"
       },
       positions: [
         {
@@ -242,11 +242,9 @@ export class AppConfigService {
           duration: "December 2024 - Present",
           location: "Mumbai, Maharashtra, India",
           description: ["Working as a consultant for BX"],
-          current: true,
           startDate: new Date("2024-12-01"),
-          branchColor: "#10b981",
-          experienceYears: 0,
-          experienceMonths: 9
+          // No endDate = current position (will be calculated dynamically)
+          branchColor: "#10b981"
         },
         {
           id: "e5f6g7h8",
@@ -262,12 +260,9 @@ export class AppConfigService {
             "Developed a WeChat API enabling Chinese users to check inquiry status via WeChat",
             "Reduced redundant API calls in Fapiao service, saving annually in tax per request"
           ],
-          current: false,
           startDate: new Date("2023-05-01"),
           endDate: new Date("2024-11-30"),
-          branchColor: "#f59e0b",
-          experienceYears: 1,
-          experienceMonths: 7
+          branchColor: "#f59e0b"
         },
         {
           id: "i9j0k1l2",
@@ -281,12 +276,9 @@ export class AppConfigService {
             "ASP.NET MVC 5 implementation",
             "Webforms development"
           ],
-          current: false,
           startDate: new Date("2021-04-01"),
           endDate: new Date("2023-05-31"),
-          branchColor: "#3b82f6",
-          experienceYears: 2,
-          experienceMonths: 2
+          branchColor: "#3b82f6"
         },
         {
           id: "m3n4o5p6",
@@ -295,12 +287,9 @@ export class AppConfigService {
           duration: "January 2021 - February 2021",
           location: "India",
           description: ["Worked on the Frontend development"],
-          current: false,
           startDate: new Date("2021-01-01"),
           endDate: new Date("2021-02-28"),
-          branchColor: "#8b5cf6",
-          experienceYears: 0,
-          experienceMonths: 2
+          branchColor: "#8b5cf6"
         }
       ]
     },
