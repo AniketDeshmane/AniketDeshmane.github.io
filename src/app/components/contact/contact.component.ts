@@ -27,7 +27,7 @@ interface ContactInfo {
             {{ config?.title || 'Get In Touch' }}
           </h2>
           <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {{ config?.description || 'Ready to collaborate on your next project? Let\'s connect and discuss opportunities.' }}
+            {{ getDescription() }}
           </p>
         </div>
 
@@ -178,5 +178,12 @@ export class ContactComponent implements OnInit {
 
   openGitHub(): void {
     window.open('https://github.com/AniketDeshmane', '_blank');
+  }
+
+  getDescription(): string {
+    if (this.config?.description) {
+      return this.config.description;
+    }
+    return 'Ready to collaborate on your next project? Let\'s connect and discuss opportunities.';
   }
 }

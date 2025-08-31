@@ -14,14 +14,24 @@ import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../sh
   template: `
     <section id="experience" class="py-20 bg-background">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
-            {{ config?.title || 'Professional Experience' }}
-          </h2>
-          <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {{ config?.subtitle || 'A journey through my professional growth and key contributions' }}
-          </p>
-        </div>
+                 <div class="text-center mb-16">
+           <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
+             {{ config?.title || 'Professional Experience' }}
+           </h2>
+           <p class="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
+             {{ config?.subtitle || 'A journey through my professional growth and key contributions' }}
+           </p>
+           
+           <!-- Experience Summary -->
+           <div class="bg-muted/20 border border-border rounded-lg p-6 max-w-2xl mx-auto">
+             <div class="text-lg font-semibold text-foreground mb-2">
+               {{ getTotalExperienceText() }}
+             </div>
+             <div class="text-sm text-muted-foreground">
+               {{ getFeatureBranchesText() }}
+             </div>
+           </div>
+         </div>
 
         <div class="max-w-6xl mx-auto relative">
           <!-- Git-style timeline container -->
@@ -116,18 +126,9 @@ import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../sh
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="mt-16 text-center">
-          <div class="text-lg font-semibold text-foreground">
-            {{ getTotalExperienceText() }}
-          </div>
-          <div class="text-sm text-muted-foreground">
-            {{ getFeatureBranchesText() }}
-          </div>
-        </div>
-      </div>
-    </section>
+                 </div>
+       </div>
+     </section>
   `,
   styles: [`
     .arrow-active {
