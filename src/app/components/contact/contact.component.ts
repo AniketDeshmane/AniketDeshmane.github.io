@@ -125,8 +125,11 @@ export class ContactComponent implements OnInit {
   constructor(private configService: AppConfigService) {}
 
   ngOnInit() {
+    console.log('🔄 ContactComponent: ngOnInit started');
     this.config = this.configService.getContactConfig();
+    console.log('📋 Contact config loaded:', this.config);
     this.setupContactInfo();
+    console.log('✅ ContactComponent: ngOnInit completed');
   }
 
   private setupContactInfo() {
@@ -181,9 +184,12 @@ export class ContactComponent implements OnInit {
   }
 
   getDescription(): string {
+    console.log('📝 getDescription called, config:', this.config);
     if (this.config?.description) {
+      console.log('✅ Using config description:', this.config.description);
       return this.config.description;
     }
+    console.log('⚠️ Using fallback description');
     return 'Ready to collaborate on your next project? Let\'s connect and discuss opportunities.';
   }
 }
