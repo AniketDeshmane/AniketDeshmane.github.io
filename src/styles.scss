@@ -124,4 +124,18 @@ All colors MUST be HSL.
   html {
     scroll-behavior: smooth;
   }
+  
+  /* Git timeline animations */
+  @keyframes git-commit-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(249, 115, 22, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 30px rgba(249, 115, 22, 0.4);
+    }
+  }
+  
+  .git-commit-glow {
+    animation: git-commit-glow 2s ease-in-out infinite;
+  }
 }
