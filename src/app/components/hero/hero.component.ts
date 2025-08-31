@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { 
   lucideChevronDown, 
@@ -7,6 +7,7 @@ import {
   lucideGithub
 } from '@ng-icons/lucide';
 import { ButtonComponent } from '../ui/button/button.component';
+import { AppConfigService, HeroConfig } from '../../shared/config/app-config';
 
 @Component({
   selector: 'app-hero',
@@ -19,14 +20,13 @@ import { ButtonComponent } from '../ui/button/button.component';
       <div class="container mx-auto px-4 text-center relative z-10">
         <div class="max-w-4xl mx-auto animate-fade-in">
           <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
-            Aniket Deshmane
+            {{ config?.title || 'Aniket Deshmane' }}
           </h1>
           <p class="text-xl md:text-2xl text-muted-foreground mb-4">
-            Software Engineer | C# | Angular | AWS
+            {{ config?.subtitle || 'Software Engineer | C# | Angular | AWS' }}
           </p>
           <p class="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Passionate software engineer with expertise in full-stack development, 
-            cloud technologies, and creating scalable solutions that drive business growth.
+            {{ config?.description || 'Passionate software engineer with expertise in full-stack development, cloud technologies, and creating scalable solutions that drive business growth.' }}
           </p>
           
           <div class="flex flex-wrap gap-4 justify-center mb-12">
@@ -35,14 +35,14 @@ import { ButtonComponent } from '../ui/button/button.component';
               size="lg"
               (click)="scrollToSection('experience')"
               class="bg-primary hover:bg-primary/90 animate-glow cursor-pointer">
-              View Experience
+              {{ config?.cta?.primary || 'View Experience' }}
             </app-button>
             <app-button 
               variant="outline" 
               size="lg"
               (click)="scrollToSection('contact')"
               class="border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer">
-              Get In Touch
+              {{ config?.cta?.secondary || 'Get In Touch' }}
             </app-button>
           </div>
 
@@ -85,7 +85,15 @@ import { ButtonComponent } from '../ui/button/button.component';
   `,
   styles: []
 })
-export class HeroComponent {
+export class HeroComponent implements OnInit {
+  config: HeroConfig | null = null;
+
+  constructor(private configService: AppConfigService) {}
+
+  ngOnInit() {
+    this.config = this.configService.getHeroConfig();
+  }
+
   scrollToSection(sectionId: string): void {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   }

@@ -1,24 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucideBuilding, lucideCalendar, lucideMapPin, lucideGitBranch, lucideGitMerge, lucideGitCommit } from '@ng-icons/lucide';
 import { CardComponent } from '../ui/card/card.component';
 import { BadgeComponent } from '../ui/badge/badge.component';
-
-interface Experience {
-  id: string;
-  company: string;
-  position: string;
-  duration: string;
-  location: string;
-  description: string[];
-  current?: boolean;
-  startDate: Date;
-  endDate?: Date;
-  branchColor: string;
-  experienceYears: number;
-  experienceMonths: number;
-}
+import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../shared/config/app-config';
 
 @Component({
   selector: 'app-experience-timeline',
@@ -30,26 +16,26 @@ interface Experience {
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
-            Professional Experience
+            {{ config?.title || 'Professional Experience' }}
           </h2>
           <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
-            A journey through my professional growth and key contributions
+            {{ config?.subtitle || 'A journey through my professional growth and key contributions' }}
           </p>
         </div>
 
         <div class="max-w-6xl mx-auto relative">
-                                <!-- Git-style timeline container -->
-           <div class="relative">
-             
-             <!-- Vertical timeline line -->
-             <div class="absolute left-8 top-0 bottom-0 flex flex-col">
-               <!-- Main timeline line -->
-               <div [class]="'absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-400 to-orange-600 transition-all duration-500 ' + 
-                 (hoveredExperience ? 'opacity-100 shadow-lg shadow-orange-500/50' : 'opacity-30')"></div>
-             </div>
-             
-             <!-- Experience cards positioned as Git commits -->
-             <div class="space-y-8 ml-16">
+          <!-- Git-style timeline container -->
+          <div class="relative">
+            
+            <!-- Vertical timeline line -->
+            <div class="absolute left-8 top-0 bottom-0 flex flex-col">
+              <!-- Main timeline line -->
+              <div [class]="'absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-400 to-orange-600 transition-all duration-500 ' + 
+                (hoveredExperience ? 'opacity-100 shadow-lg shadow-orange-500/50' : 'opacity-30')"></div>
+            </div>
+            
+            <!-- Experience cards positioned as Git commits -->
+            <div class="space-y-8 ml-16">
               <div 
                 *ngFor="let exp of experiences; let i = index"
                 class="relative flex items-start gap-8 animate-fade-in"
@@ -76,7 +62,7 @@ interface Experience {
                       class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 border border-green-400/30 rounded-lg px-4 py-3 text-xs font-mono text-white shadow-xl animate-fade-in z-30">
                       <div class="flex items-center gap-2">
                         <ng-icon name="lucideGitMerge" size="14" class="text-green-100"></ng-icon>
-                                                 <span class="font-semibold">Merging {{ getExperienceYears(exp) }}y {{ getExperienceMonths(exp) }}m to main career</span>
+                        <span class="font-semibold">{{ getMergeMessage(exp) }}</span>
                       </div>
                     </div>
                     
@@ -129,23 +115,15 @@ interface Experience {
                 </div>
               </div>
             </div>
-            
-            
           </div>
-          
-          <!-- Total experience summary -->
-          <div class="mt-12 text-center">
-            <div class="inline-flex items-center gap-4 p-4 bg-card-gradient border border-border rounded-lg">
-              <ng-icon name="lucideGitMerge" size="24" class="text-primary"></ng-icon>
-              <div>
-                <div class="text-lg font-semibold text-foreground">
-                  Total Career Experience: {{ totalExperienceYears }}y {{ totalExperienceMonths }}m
-                </div>
-                <div class="text-sm text-muted-foreground">
-                  {{ experiences.length }} feature branches merged into main career
-                </div>
-              </div>
-            </div>
+        </div>
+
+        <div class="mt-16 text-center">
+          <div class="text-lg font-semibold text-foreground">
+            {{ getTotalExperienceText() }}
+          </div>
+          <div class="text-sm text-muted-foreground">
+            {{ getFeatureBranchesText() }}
           </div>
         </div>
       </div>
@@ -153,7 +131,7 @@ interface Experience {
   `,
   styles: [`
     .arrow-active {
-      width: 4rem !important;
+      width: 2rem !important;
       opacity: 1 !important;
     }
     
@@ -173,75 +151,17 @@ interface Experience {
     }
   `]
 })
-export class ExperienceTimelineComponent {
+export class ExperienceTimelineComponent implements OnInit {
   hoveredExperience: string | null = null;
-  
-  experiences: Experience[] = [
-    {
-      id: "a1b2c3d4",
-      company: "OneRock IT Services Private Limited",
-      position: "Software Engineer",
-      duration: "December 2024 - Present",
-      location: "Mumbai, Maharashtra, India",
-      description: ["Working as a consultant for BX"],
-      current: true,
-      startDate: new Date('2024-12-01'),
-      branchColor: "#10b981", // green
-      experienceYears: 0,
-      experienceMonths: 2
-    },
-    {
-      id: "e5f6g7h8",
-      company: "Enago (Crimson Interactive)",
-      position: "Software Engineer", 
-      duration: "May 2023 - November 2024",
-      location: "Mumbai, Maharashtra, India",
-      description: [
-        "Revamped AfterSales module, increasing aftersales by 50% and improving user experience",
-        "Developed UI using Angular 12 and backend with .NET 6 APIs running on Docker",
-        "Created a BI/BA dashboard to track inquiries and conversions for stakeholders",
-        "Integrated API into marketing page, reducing group account creation time and implemented backend security (blacklisting, rate limiting, authentication)",
-        "Developed a WeChat API enabling Chinese users to check inquiry status via WeChat",
-        "Reduced redundant API calls in Fapiao service, saving annually in tax per request"
-      ],
-      startDate: new Date('2023-05-01'),
-      endDate: new Date('2024-11-30'),
-      branchColor: "#f59e0b", // amber
-      experienceYears: 1,
-      experienceMonths: 7
-    },
-    {
-      id: "i9j0k1l2",
-      company: "Tata Consultancy Services",
-      position: "Assistant System Engineer",
-      duration: "April 2021 - May 2023",
-      location: "India",
-      description: [
-        "Enhancement/Development of WebApps using ASP.Net",
-        "WebAPI development",
-        "ASP.NET MVC 5 implementation",
-        "Webforms development"
-      ],
-      startDate: new Date('2021-04-01'),
-      endDate: new Date('2023-05-31'),
-      branchColor: "#3b82f6", // blue instead of red
-      experienceYears: 2,
-      experienceMonths: 2
-    },
-    {
-      id: "m3n4o5p6",
-      company: "Exaosis",
-      position: ".NET Developer",
-      duration: "January 2021 - February 2021",
-      location: "India", 
-      description: ["Worked on the Frontend development"],
-      startDate: new Date('2021-01-01'),
-      endDate: new Date('2021-02-28'),
-      branchColor: "#8b5cf6", // purple
-      experienceYears: 0,
-      experienceMonths: 2
-    }
-  ];
+  config: ExperienceConfig | null = null;
+  experiences: ExperiencePosition[] = [];
+
+  constructor(private configService: AppConfigService) {}
+
+  ngOnInit() {
+    this.config = this.configService.getExperienceConfig();
+    this.experiences = this.config.positions;
+  }
 
   get totalExperienceYears(): number {
     return this.experiences.reduce((total, exp) => total + this.getExperienceYears(exp), 0);
@@ -251,7 +171,7 @@ export class ExperienceTimelineComponent {
     return this.experiences.reduce((total, exp) => total + this.getExperienceMonths(exp), 0);
   }
 
-  getExperienceYears(exp: Experience): number {
+  getExperienceYears(exp: ExperiencePosition): number {
     if (exp.current) {
       // Calculate dynamic duration for current position
       const endDate = new Date();
@@ -264,7 +184,7 @@ export class ExperienceTimelineComponent {
     return exp.experienceYears;
   }
 
-  getExperienceMonths(exp: Experience): number {
+  getExperienceMonths(exp: ExperiencePosition): number {
     if (exp.current) {
       // Calculate dynamic duration for current position
       const endDate = new Date();
@@ -277,6 +197,35 @@ export class ExperienceTimelineComponent {
       return months;
     }
     return exp.experienceMonths;
+  }
+
+  getMergeMessage(exp: ExperiencePosition): string {
+    if (!this.config?.timeline.mergeMessage) {
+      return `Merging ${this.getExperienceYears(exp)}y ${this.getExperienceMonths(exp)}m to main career`;
+    }
+    
+    return this.config.timeline.mergeMessage
+      .replace('{years}', this.getExperienceYears(exp).toString())
+      .replace('{months}', this.getExperienceMonths(exp).toString());
+  }
+
+  getTotalExperienceText(): string {
+    if (!this.config?.timeline.totalExperience) {
+      return `Total Career Experience: ${this.totalExperienceYears}y ${this.totalExperienceMonths}m`;
+    }
+    
+    return this.config.timeline.totalExperience
+      .replace('{years}', this.totalExperienceYears.toString())
+      .replace('{months}', this.totalExperienceMonths.toString());
+  }
+
+  getFeatureBranchesText(): string {
+    if (!this.config?.timeline.featureBranches) {
+      return `${this.experiences.length} feature branches merged into main career`;
+    }
+    
+    return this.config.timeline.featureBranches
+      .replace('{count}', this.experiences.length.toString());
   }
 
   onExperienceHover(experienceId: string) {

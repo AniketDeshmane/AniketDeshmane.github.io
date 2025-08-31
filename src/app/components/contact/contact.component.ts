@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucideMail, lucidePhone } from '@ng-icons/lucide';
 import { CardComponent } from '../ui/card/card.component';
 import { ButtonComponent } from '../ui/button/button.component';
+import { AppConfigService, ContactConfig } from '../../shared/config/app-config';
 
 interface ContactInfo {
   icon: string;
@@ -23,10 +24,10 @@ interface ContactInfo {
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
-            Get In Touch
+            {{ config?.title || 'Get In Touch' }}
           </h2>
           <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Ready to collaborate on your next project? Let's connect and discuss opportunities.
+            {{ config?.description || 'Ready to collaborate on your next project? Let\'s connect and discuss opportunities.' }}
           </p>
         </div>
 
@@ -100,41 +101,82 @@ interface ContactInfo {
       </div>
     </section>
   `,
-  styles: []
-})
-export class ContactComponent {
-  contactInfo: ContactInfo[] = [
-    {
-      icon: 'lucidePhone',
-      label: 'Phone',
-      value: '+91 9619663812',
-      action: () => window.open('tel:+919619663812'),
-      color: 'from-green-500 to-emerald-500'
-    },
-    {
-      icon: 'lucideMail',
-      label: 'Email', 
-      value: 'aniketmdeshmane@gmail.com',
-      action: () => window.open('mailto:aniketmdeshmane@gmail.com'),
-      color: 'from-blue-500 to-cyan-500'
-    },
-    {
-      icon: 'linkedin',
-      label: 'LinkedIn',
-      value: 'linkedin.com/in/aniketdeshmane',
-      action: () => window.open('https://www.linkedin.com/in/aniketdeshmane', '_blank'),
-      color: 'from-indigo-500 to-blue-500'
-    },
-    {
-      icon: 'github',
-      label: 'GitHub',
-      value: 'github.com/AniketDeshmane',
-      action: () => window.open('https://github.com/AniketDeshmane', '_blank'),
-      color: 'from-purple-500 to-pink-500'
+  styles: [`
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-  ];
+    
+    .animate-fade-in {
+      animation: fade-in 0.6s ease-out forwards;
+    }
+  `]
+})
+export class ContactComponent implements OnInit {
+  config: ContactConfig | null = null;
+  contactInfo: ContactInfo[] = [];
+
+  constructor(private configService: AppConfigService) {}
+
+  ngOnInit() {
+    this.config = this.configService.getContactConfig();
+    this.setupContactInfo();
+  }
+
+  private setupContactInfo() {
+    if (!this.config) return;
+
+    this.contactInfo = [
+      {
+        icon: 'lucidePhone',
+        label: this.config.info.phone.label,
+        value: this.config.info.phone.value,
+        action: () => this.callPhone(),
+        color: 'from-blue-500 to-blue-600'
+      },
+      {
+        icon: 'lucideMail',
+        label: this.config.info.email.label,
+        value: this.config.info.email.value,
+        action: () => this.sendEmail(),
+        color: 'from-green-500 to-green-600'
+      },
+      {
+        icon: 'linkedin',
+        label: 'LinkedIn',
+        value: 'linkedin.com/in/aniketdeshmane',
+        action: () => this.openLinkedIn(),
+        color: 'from-blue-600 to-blue-700'
+      },
+      {
+        icon: 'github',
+        label: 'GitHub',
+        value: 'github.com/AniketDeshmane',
+        action: () => this.openGitHub(),
+        color: 'from-gray-600 to-gray-700'
+      }
+    ];
+  }
+
+  callPhone(): void {
+    window.open('tel:+919619663812', '_self');
+  }
 
   sendEmail(): void {
-    window.open('mailto:aniketmdeshmane@gmail.com');
+    window.open('mailto:aniketmdeshmane@gmail.com', '_self');
+  }
+
+  openLinkedIn(): void {
+    window.open('https://www.linkedin.com/in/aniketdeshmane', '_blank');
+  }
+
+  openGitHub(): void {
+    window.open('https://github.com/AniketDeshmane', '_blank');
   }
 }
