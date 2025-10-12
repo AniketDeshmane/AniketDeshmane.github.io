@@ -433,7 +433,7 @@ export class AppConfigService {
       info: {
         email: {
           label: "Email",
-          value: "aniket.deshmane@example.com",
+          value: "aniket.deshmane@gmail.com",
           icon: "mail"
         },
         location: {
