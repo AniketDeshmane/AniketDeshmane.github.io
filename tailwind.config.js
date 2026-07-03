@@ -14,6 +14,9 @@ module.exports = {
       }
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -59,6 +62,7 @@ module.exports = {
           ring: 'hsl(var(--sidebar-ring))'
         },
         'skill-accent': 'hsl(var(--skill-accent))',
+        'blue-accent': 'hsl(var(--blue-accent))',
         'timeline-line': 'hsl(var(--timeline-line))',
         glow: 'hsl(var(--glow))'
       },
@@ -69,7 +73,17 @@ module.exports = {
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
+        sm: 'calc(var(--radius) - 4px)',
+        'xl': '1rem',
+        '2xl': '1.5rem',
+        '3xl': '2rem',
+        '4xl': '2.5rem',
+      },
+      boxShadow: {
+        'soft': '0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 24px rgba(0, 0, 0, 0.03)',
+        'card': '0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.04)',
+        'card-hover': '0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.06)',
+        'elevated': '0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
       },
       keyframes: {
         'accordion-down': {
@@ -91,47 +105,49 @@ module.exports = {
         'fade-in': {
           '0%': {
             opacity: '0',
-            transform: 'translateY(20px)'
+            transform: 'translateY(24px)'
           },
           '100%': {
             opacity: '1',
             transform: 'translateY(0)'
           }
         },
-        'slide-in-right': {
+        'slide-up': {
           '0%': {
             opacity: '0',
-            transform: 'translateX(50px)'
+            transform: 'translateY(40px)'
           },
           '100%': {
             opacity: '1',
-            transform: 'translateX(0)'
+            transform: 'translateY(0)'
           }
         },
-        'flip': {
+        'scale-in': {
           '0%': {
-            transform: 'rotateY(0deg)'
+            opacity: '0',
+            transform: 'scale(0.95)'
           },
           '100%': {
-            transform: 'rotateY(180deg)'
+            opacity: '1',
+            transform: 'scale(1)'
           }
         },
-        'glow': {
+        'warm-glow': {
           '0%, 100%': {
-            boxShadow: '0 0 20px hsl(var(--glow) / 0.3)'
+            boxShadow: '0 0 20px hsl(var(--glow) / 0.15)'
           },
           '50%': {
-            boxShadow: '0 0 40px hsl(var(--glow) / 0.6)'
+            boxShadow: '0 0 30px hsl(var(--glow) / 0.25)'
           }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'fade-in': 'fade-in 0.6s ease-out forwards',
-        'slide-in-right': 'slide-in-right 0.5s ease-out forwards',
-        'flip': 'flip 0.6s ease-in-out',
-        'glow': 'glow 2s ease-in-out infinite'
+        'fade-in': 'fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'slide-up': 'slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'scale-in': 'scale-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'warm-glow': 'warm-glow 3s ease-in-out infinite',
       }
     }
   },

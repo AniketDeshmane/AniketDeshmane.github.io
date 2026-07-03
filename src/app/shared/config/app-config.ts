@@ -230,7 +230,7 @@ export class AppConfigService {
       timeline: {
         title: "Career Git History",
         subtitle: "My professional journey visualized as Git commits and feature branches",
-        mergeMessage: "Merging {years}y {months}m to career",
+        mergeMessage: "Merged {years}y {months}m to career",
         totalExperience: "Total Career Experience: {years}y {months}m",
         featureBranches: "{count} feature branches merged into career"
       },
@@ -238,27 +238,42 @@ export class AppConfigService {
         {
           id: "a1b2c3d4",
           company: "OneRock IT Services Private Limited",
+          position: "Senior Software Engineer",
+          duration: "Mar 2026 - Present",
+          location: "Mumbai, Maharashtra, India · Hybrid",
+          description: [
+            "ASP.NET Web API and Amazon Simple Notification Service (SNS)"
+          ],
+          startDate: new Date("2026-03-01"),
+          branchColor: "#10b981"
+        },
+        {
+          id: "q7r8s9t0",
+          company: "OneRock IT Services Private Limited",
           position: "Software Engineer",
-          duration: "December 2024 - Present",
-          location: "Mumbai, Maharashtra, India",
-          description: ["Working as a consultant for BX"],
+          duration: "Dec 2024 - Mar 2026",
+          location: "Mumbai, Maharashtra, India · Hybrid",
+          description: [
+            "Working as a consultant for Blackstone",
+            "Microservices and .NET Core"
+          ],
           startDate: new Date("2024-12-01"),
-          // No endDate = current position (will be calculated dynamically)
+          endDate: new Date("2026-03-01"),
           branchColor: "#10b981"
         },
         {
           id: "e5f6g7h8",
           company: "Enago (Crimson Interactive)",
           position: "Software Engineer",
-          duration: "May 2023 - November 2024",
-          location: "Mumbai, Maharashtra, India",
+          duration: "May 2023 - Nov 2024",
+          location: "Mumbai, Maharashtra, India · Hybrid",
           description: [
-            "Revamped AfterSales module, increasing aftersales by 50% and improving user experience",
-            "Developed UI using Angular 12 and backend with .NET 6 APIs running on Docker",
-            "Created a BI/BA dashboard to track inquiries and conversions for stakeholders",
-            "Integrated API into marketing page, reducing group account creation time and implemented backend security (blacklisting, rate limiting, authentication)",
-            "Developed a WeChat API enabling Chinese users to check inquiry status via WeChat",
-            "Reduced redundant API calls in Fapiao service, saving annually in tax per request"
+            "Revamped AfterSales module, boosting aftersales by 50% and improving user experience",
+            "Built UI in Angular 12 and APIs in .NET 6 on Docker",
+            "Created BI/BA dashboard to track inquiries and conversions for stakeholders",
+            "Integrated API into marketing page, reducing group account creation time and implementing backend security (blacklisting, rate limiting, authentication)",
+            "Developed WeChat API enabling Chinese users to check inquiry status via WeChat",
+            "Optimized Fapiao service APIs, cutting redundant calls and saving annual tax per request"
           ],
           startDate: new Date("2023-05-01"),
           endDate: new Date("2024-11-30"),
@@ -268,10 +283,10 @@ export class AppConfigService {
           id: "i9j0k1l2",
           company: "Tata Consultancy Services",
           position: "Assistant System Engineer",
-          duration: "April 2021 - May 2023",
-          location: "India",
+          duration: "Apr 2021 - May 2023",
+          location: "India · Remote",
           description: [
-            "Enhancement/Development of WebApps using ASP.Net",
+            "Enhancement/Development of WebApps using ASP.NET",
             "WebAPI development",
             "ASP.NET MVC 5 implementation",
             "Webforms development"
@@ -284,9 +299,9 @@ export class AppConfigService {
           id: "m3n4o5p6",
           company: "Exaosis",
           position: ".NET Developer",
-          duration: "January 2021 - February 2021",
+          duration: "Jan 2021 - Feb 2021",
           location: "India",
-          description: ["Worked on the Frontend development"],
+          description: ["Worked on Frontend development"],
           startDate: new Date("2021-01-01"),
           endDate: new Date("2021-02-28"),
           branchColor: "#8b5cf6"
@@ -433,7 +448,7 @@ export class AppConfigService {
       info: {
         email: {
           label: "Email",
-          value: "aniket.deshmane@gmail.com",
+          value: "aniketmdeshmane@gmail.com",
           icon: "mail"
         },
         location: {
@@ -443,7 +458,7 @@ export class AppConfigService {
         },
         phone: {
           label: "Phone",
-          value: "+91 98765 43210",
+          value: "+91 96196 63812",
           icon: "phone"
         }
       }

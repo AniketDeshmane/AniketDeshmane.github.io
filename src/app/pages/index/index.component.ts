@@ -3,7 +3,6 @@ import { HeroComponent } from '../../components/hero/hero.component';
 import { ExperienceTimelineComponent } from '../../components/experience-timeline/experience-timeline.component';
 import { SkillCardsComponent } from '../../components/skill-cards/skill-cards.component';
 import { ContactComponent } from '../../components/contact/contact.component';
-import { CustomCursorComponent } from '../../components/custom-cursor/custom-cursor.component';
 
 @Component({
   selector: 'app-index',
@@ -12,12 +11,10 @@ import { CustomCursorComponent } from '../../components/custom-cursor/custom-cur
     HeroComponent,
     ExperienceTimelineComponent,
     SkillCardsComponent,
-    ContactComponent,
-    CustomCursorComponent
+    ContactComponent
   ],
   template: `
     <div class="min-h-screen bg-background">
-      <app-custom-cursor></app-custom-cursor>
       <app-hero></app-hero>
       <app-experience-timeline></app-experience-timeline>
       <app-skill-cards></app-skill-cards>

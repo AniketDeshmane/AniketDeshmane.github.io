@@ -1,384 +1,548 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { lucideBuilding, lucideCalendar, lucideMapPin, lucideGitBranch, lucideGitMerge, lucideGitCommit } from '@ng-icons/lucide';
-import { CardComponent } from '../ui/card/card.component';
-import { BadgeComponent } from '../ui/badge/badge.component';
 import { AppConfigService, ExperienceConfig, ExperiencePosition } from '../../shared/config/app-config';
+
+interface GroupedExperience {
+  company: string;
+  location: string;
+  branchColor: string;
+  current: boolean;
+  duration: string;
+  positions: ExperiencePosition[];
+}
 
 @Component({
   selector: 'app-experience-timeline',
   standalone: true,
-  imports: [CommonModule, CardComponent, BadgeComponent, NgIconComponent],
-  viewProviders: [provideIcons({ lucideBuilding, lucideCalendar, lucideMapPin, lucideGitBranch, lucideGitMerge, lucideGitCommit })],
-     template: `
-     <section id="experience" class="py-12 sm:py-16 lg:py-20 bg-background">
-       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-         <div class="text-center mb-12 sm:mb-16">
-           <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary to-skill-accent bg-clip-text text-transparent">
-             {{ config?.title || 'Professional Experience' }}
-           </h2>
-           <p class="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
-             {{ config?.subtitle || 'A journey through my professional growth and key contributions' }}
-           </p>
-           
-           <!-- Experience Summary -->
-           <div class="bg-muted/20 border border-border rounded-lg p-4 sm:p-6 max-w-2xl mx-auto mx-4">
-             <div class="text-base sm:text-lg font-semibold text-foreground mb-2">
-               {{ getTotalExperienceText() }}
-             </div>
-             <div class="text-xs sm:text-sm text-muted-foreground">
-               {{ getFeatureBranchesText() }}
-             </div>
-           </div>
-         </div>
+  imports: [CommonModule],
+  template: `
+    <section id="experience" class="py-20 bg-background relative overflow-hidden">
+      <div class="max-w-4xl mx-auto px-6 sm:px-8">
+        
+        <!-- Section Header -->
+        <div class="mb-14 text-left animate-fade-in">
+          <span class="inline-block text-xs font-semibold tracking-widest text-primary bg-primary/10 border border-primary/20 px-3.5 py-1 rounded-full mb-4 uppercase">
+            Experience
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-foreground mb-4">
+            {{ config?.title || 'Professional Experience' }}
+          </h2>
+          <p class="text-muted-foreground text-base sm:text-lg max-w-2xl mb-8">
+            {{ config?.subtitle || 'A journey through my professional growth and key contributions' }}
+          </p>
 
-         <div class="max-w-6xl mx-auto relative">
-           <!-- Git-style timeline container -->
-           <div class="relative">
-             
-                           <!-- Vertical timeline line - hidden on mobile, visible on larger screens -->
-              <div class="hidden sm:block absolute left-8 top-0 bottom-0 flex flex-col">
-                <!-- Main timeline line -->
-                <div 
-                  [ngClass]="{
-                    'timeline-line-active': hoveredExperience,
-                    'timeline-line-default': !hoveredExperience
-                  }"
-                  [style.background]="hoveredBranchColor ? hoveredBranchColor : 'linear-gradient(to bottom, #4ade80, #16a34a)'"
-                  [style.box-shadow]="hoveredBranchColor ? '0 10px 15px -3px rgba(0,0,0,0.3)' : 'none'"
-                  class="absolute left-0 top-0 bottom-0 w-1 transition-all duration-500">
+          <!-- Dynamic Live Stats bar -->
+          <div class="flex flex-col sm:flex-row gap-6 bg-card border border-border shadow-soft rounded-3xl p-6 sm:p-7 max-w-2xl hover:border-primary/15 transition-all duration-300">
+            
+            <!-- Live Ticker Column -->
+            <div class="flex-1 min-w-0">
+              <span class="block text-[10px] sm:text-xs text-muted-foreground uppercase font-bold tracking-wider mb-2 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                <span>Live Career Counter</span>
+              </span>
+              
+              <!-- Ticking Decimal Counter -->
+              <div class="text-3xl sm:text-4xl font-black text-primary tracking-tight font-mono tabular-nums mb-1">
+                {{ liveFractionalYears }} <span class="text-sm font-bold text-muted-foreground uppercase">yrs</span>
+              </div>
+              
+              <!-- Human Readable Live Counter -->
+              <div class="text-xs sm:text-sm text-foreground/80 font-semibold font-mono tabular-nums flex flex-wrap gap-x-2 gap-y-1">
+                <span class="bg-secondary/60 border border-border/40 px-2 py-0.5 rounded-lg">{{ liveY }} yrs</span>
+                <span class="bg-secondary/60 border border-border/40 px-2 py-0.5 rounded-lg">{{ liveM }} mos</span>
+                <span class="bg-secondary/60 border border-border/40 px-2 py-0.5 rounded-lg">{{ liveD }} days</span>
+                <span class="bg-secondary/60 border border-border/40 px-2 py-0.5 rounded-lg">{{ liveH }} hrs</span>
+                <span class="bg-secondary/60 border border-border/40 px-2 py-0.5 rounded-lg">{{ liveMin }} mins</span>
+                <span class="bg-secondary/60 border border-border/40 px-2 py-0.5 rounded-lg text-primary">{{ liveS }}s</span>
+              </div>
+            </div>
+
+            <!-- Dividers -->
+            <div class="hidden sm:block border-r border-border h-16 my-auto"></div>
+            <div class="block sm:hidden border-b border-border w-full"></div>
+
+            <!-- Positions Count Column -->
+            <div class="flex items-center sm:flex-col sm:justify-center gap-4 sm:gap-1 text-left sm:text-center px-2">
+              <div class="text-3xl sm:text-4xl font-black text-foreground">
+                {{ rawPositionsCount }}
+              </div>
+              <div>
+                <span class="block text-[10px] sm:text-xs text-muted-foreground uppercase font-bold tracking-wider">Positions</span>
+                <span class="block text-[9px] text-muted-foreground/60 leading-none">{{ groupedExperiences.length }} Companies</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Timeline Container -->
+        <div class="timeline-container relative pl-6 sm:pl-8 ml-3 sm:ml-4 space-y-12">
+          
+          <!-- Animated Timeline Line -->
+          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-border/80">
+            <!-- Traveler Chevron Arrow -->
+            <div 
+              class="absolute left-[1px] -translate-x-1/2 -translate-y-1/2 z-20 text-primary pointer-events-none"
+              [style.top.px]="travelerTop"
+              [style.opacity]="travelerOpacity"
+              [style.transition]="travelerTransition">
+              
+              <!-- Sleek outline chevron pointing up, matching user's drawing -->
+              <svg class="w-4 h-4 stroke-current fill-none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+              
+              <!-- Soft trail ripple ring -->
+              <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary/20 animate-ping"></span>
+            </div>
+          </div>
+          
+          <!-- Timeline Items Loop -->
+          <div
+            *ngFor="let group of groupedExperiences; let i = index"
+            #timelineItem
+            class="timeline-item relative transition-all duration-700 ease-out opacity-0 translate-y-8"
+            [class.opacity-100]="visibleItems[i]"
+            [class.translate-y-0]="visibleItems[i]"
+            [style.transition-delay]="(i * 100) + 'ms'">
+            
+            <!-- Timeline Node Indicator -->
+            <div class="timeline-node absolute -left-[31px] sm:-left-[39px] top-1.5 z-10 flex items-center justify-center">
+              
+              <!-- Radar Splash Rings (triggered when traveler reaches the node) -->
+              <div 
+                *ngIf="splashActive[i]" 
+                class="absolute w-8 h-8 rounded-full bg-primary/20 border border-primary/40 animate-radar-splash">
+              </div>
+              <div 
+                *ngIf="splashActive[i]" 
+                class="absolute w-12 h-12 rounded-full bg-primary/10 border border-primary/20 animate-radar-splash-delayed">
+              </div>
+
+              <!-- Main Dot -->
+              <div 
+                class="w-4 h-4 rounded-full bg-background border-4 transition-transform duration-300 hover:scale-125"
+                [style.borderColor]="group.branchColor"
+                [style.boxShadow]="group.current ? '0 0 12px ' + group.branchColor : 'none'">
+              </div>
+            </div>
+
+            <!-- Experience Card (grouped by company) -->
+            <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:shadow-card-hover hover:border-primary/20 transition-all duration-300 transform hover:-translate-y-0.5">
+              
+              <!-- Company Header Info -->
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border/60 pb-4 mb-4">
+                <div>
+                  <h3 class="text-xl font-extrabold text-foreground">{{ group.company }}</h3>
+                  <div class="flex items-center gap-2 text-muted-foreground text-sm mt-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>{{ group.location }}</span>
+                  </div>
+                </div>
+                
+                <!-- Combined Company Duration Badge -->
+                <div class="self-start sm:self-center">
+                  <span 
+                    class="inline-block text-xs font-bold px-3 py-1 rounded-full border"
+                    [style.color]="group.branchColor"
+                    [style.borderColor]="group.branchColor + '33'"
+                    [style.backgroundColor]="group.branchColor + '0d'">
+                    {{ group.duration }}
+                  </span>
                 </div>
               </div>
-             
-             <!-- Experience cards positioned as Git commits -->
-             <div class="space-y-6 sm:space-y-8 sm:ml-16">
-               <div 
-                 *ngFor="let exp of experiences; let i = index"
-                 class="relative flex items-start gap-4 sm:gap-8 animate-fade-in"
-                 [style.animation-delay.s]="i * 0.3">
-                 
-                 <!-- Experience card as feature branch -->
-                 <div class="flex-1 relative">
-                                       <!-- Animated branch line from middle - hidden on mobile -->
-                    <div 
-                      class="hidden sm:block absolute -left-4 top-1/2 w-0 h-1.5 transition-all duration-700 ease-out opacity-0"
-                      [class.arrow-active]="hoveredExperience === exp.id"
-                      [style.background]="exp.branchColor"
-                      [style.transform]="'translateY(-50%)'">
-                    </div>
-                   
-                   <app-card 
-                     class="bg-card-gradient border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer relative"
-                     (mouseenter)="onExperienceHover(exp.id)"
-                     (mouseleave)="onExperienceLeave()">
-                     
-                     <!-- Floating merge message - adjusted for mobile -->
-                     <div 
-                       *ngIf="hoveredExperience === exp.id"
-                       class="absolute -top-10 sm:-top-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 border border-green-400/30 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs font-mono text-white shadow-xl animate-fade-in z-30 max-w-[90vw] sm:max-w-none">
-                       <div class="flex items-center gap-1 sm:gap-2">
-                         <ng-icon name="lucideGitMerge" size="12" class="sm:text-sm text-green-100"></ng-icon>
-                         <span class="font-semibold text-xs sm:text-sm">{{ getMergeMessage(exp) }}</span>
-                       </div>
-                     </div>
-                     
-                     <div class="p-4 sm:p-6">
-                       <!-- Git commit header - simplified on mobile -->
-                       <div class="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 flex-wrap">
-                         <ng-icon name="lucideGitCommit" size="14" class="sm:text-base text-primary"></ng-icon>
-                         <span class="text-xs text-muted-foreground font-mono hidden sm:inline">commit {{ exp.id }}</span>
-                         <ng-icon name="lucideGitBranch" size="14" class="sm:text-base" [style.color]="exp.branchColor"></ng-icon>
-                         <span class="text-xs font-mono hidden sm:inline" [style.color]="exp.branchColor">feature/{{ getBranchName(exp.company) }}</span>
-                       </div>
-                       
-                       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 sm:mb-3">
-                         <h3 class="text-lg sm:text-xl text-foreground flex items-center gap-2 font-semibold">
-                           <ng-icon name="lucideBuilding" size="18" class="sm:text-xl text-primary"></ng-icon>
-                           <span class="break-words">{{ exp.company }}</span>
-                         </h3>
-                         <app-badge 
-                           *ngIf="exp.current" 
-                           class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold px-2 sm:px-3 py-1 rounded-full shadow-sm border border-green-400/20 text-xs sm:text-sm self-start sm:self-auto">
-                           Current
-                         </app-badge>
-                       </div>
-                       
-                       <div class="text-primary font-semibold text-base sm:text-lg mb-2">
-                         {{ exp.position }}
-                       </div>
-                       
-                       <div class="flex flex-col gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
-                         <div class="flex items-center gap-1">
-                           <ng-icon name="lucideCalendar" size="14" class="sm:text-base"></ng-icon>
-                           <span class="break-words">{{ exp.duration }}</span>
-                         </div>
-                         <div class="flex items-center gap-1">
-                           <ng-icon name="lucideMapPin" size="14" class="sm:text-base"></ng-icon>
-                           <span class="break-words">{{ exp.location }}</span>
-                         </div>
-                       </div>
-                       
-                       <ul class="space-y-1 sm:space-y-2">
-                         <li 
-                           *ngFor="let desc of exp.description"
-                           class="text-muted-foreground flex items-start gap-2 text-sm sm:text-base">
-                           <div class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                           <span class="break-words">{{ desc }}</span>
-                         </li>
-                       </ul>
-                     </div>
-                   </app-card>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-       </div>
-     </section>
-   `,
-     styles: [`
-     .timeline-line-default {
-       opacity: 0.3;
-     }
-     
-     .timeline-line-active {
-       opacity: 1;
-     }
-     
-     .arrow-active {
-       width: 2rem !important;
-       opacity: 1 !important;
-       animation: branch-connect 0.7s ease-out forwards;
-     }
-     
-     @keyframes branch-connect {
-       0% {
-         width: 0;
-         opacity: 0;
-       }
-       50% {
-         width: 1rem;
-         opacity: 0.7;
-       }
-       100% {
-         width: 2rem;
-         opacity: 1;
-       }
-     }
-     
-     @keyframes fade-in {
-       from {
-         opacity: 0;
-         transform: translateY(20px);
-       }
-       to {
-         opacity: 1;
-         transform: translateY(0);
-       }
-     }
-     
-     .animate-fade-in {
-       animation: fade-in 0.6s ease-out forwards;
-     }
-   `]
-})
-export class ExperienceTimelineComponent implements OnInit {
-  hoveredExperience: string | null = null;
-  config: ExperienceConfig | null = null;
-  experiences: ExperiencePosition[] = [];
-  hoveredBranchColor: string | null = null;
 
-  constructor(private configService: AppConfigService) {}
+              <!-- List of Roles inside this Company -->
+              <div class="space-y-6">
+                <div 
+                  *ngFor="let exp of group.positions; let isFirstRole = first" 
+                  [class.border-l-2]="group.positions.length > 1"
+                  [class.border-dashed]="group.positions.length > 1"
+                  [style.borderLeftColor]="group.branchColor + '50'"
+                  [class.pl-5]="group.positions.length > 1"
+                  [class.ml-2]="group.positions.length > 1"
+                  [class.mt-4]="!isFirstRole && group.positions.length > 1"
+                  class="relative">
+                  
+                  <!-- Connect dot for sub-timeline if multiple positions -->
+                  <div 
+                    *ngIf="group.positions.length > 1" 
+                    class="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full border border-background"
+                    [style.backgroundColor]="group.branchColor">
+                  </div>
+                  
+                  <!-- Role Title & Sub-duration -->
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <h4 class="text-lg font-bold text-foreground leading-tight">{{ exp.position }}</h4>
+                    <span class="text-xs text-muted-foreground font-semibold">
+                      {{ exp.duration }}
+                    </span>
+                  </div>
+
+                  <!-- Details Bullet Points -->
+                  <ul class="space-y-1.5 mb-3">
+                    <li 
+                      *ngFor="let bullet of exp.description"
+                      class="text-sm text-foreground/80 leading-relaxed flex items-start gap-2.5">
+                      <span 
+                        class="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
+                        [style.backgroundColor]="group.branchColor">
+                      </span>
+                      <span>{{ bullet }}</span>
+                    </li>
+                  </ul>
+
+                  <!-- Footer pills for this role -->
+                  <div class="flex flex-wrap items-center gap-3">
+                    <span class="inline-flex items-center text-xs font-semibold text-muted-foreground bg-secondary px-2.5 py-0.5 rounded-full">
+                      {{ getExperienceDurationText(exp) }}
+                    </span>
+                    
+                    <span 
+                      *ngIf="exp.current"
+                      class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Current Role
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  `,
+  styles: [`
+    @keyframes radar-splash {
+      0% {
+        transform: scale(0.3);
+        opacity: 0.9;
+      }
+      100% {
+        transform: scale(2.8);
+        opacity: 0;
+      }
+    }
+
+    .animate-radar-splash {
+      animation: radar-splash 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-radar-splash-delayed {
+      animation: radar-splash 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    }
+  `]
+})
+export class ExperienceTimelineComponent implements OnInit, AfterViewInit, OnDestroy {
+  config: ExperienceConfig | null = null;
+  groupedExperiences: GroupedExperience[] = [];
+  rawPositionsCount = 0;
+  visibleItems: boolean[] = [];
+
+  // Live Counter state
+  liveFractionalYears = '0.00000000';
+  liveY = 0;
+  liveM = 0;
+  liveD = 0;
+  liveH = 0;
+  liveMin = 0;
+  liveS = 0;
+  private timerId: any;
+  private completedMs = 0;
+  private activeStartDate: Date | null = null;
+
+  // Traveler Arrow Animation state
+  travelerTop = 0;
+  travelerOpacity = 0;
+  travelerTransition = 'none';
+  splashActive: boolean[] = [];
+  private isDestroyed = false;
+
+  @ViewChildren('timelineItem') timelineItems!: QueryList<ElementRef>;
+
+  constructor(private configService: AppConfigService, private el: ElementRef) {}
 
   ngOnInit() {
-    console.log('🔄 ExperienceTimelineComponent: ngOnInit started');
     this.config = this.configService.getExperienceConfig();
-    console.log('📋 Config loaded:', this.config);
-    
-    this.experiences = this.config.positions.map(exp => {
+    this.rawPositionsCount = this.config.positions.length;
+
+    const experiences = this.config.positions.map(exp => {
       const current = !exp.endDate;
-      const experienceYears = this.calculateExperienceYears(exp);
-      const experienceMonths = this.calculateExperienceMonths(exp);
-      
-      console.log(`🏢 ${exp.company}:`, {
-        startDate: exp.startDate,
-        endDate: exp.endDate || 'Current',
-        current: current,
-        experienceYears: experienceYears,
-        experienceMonths: experienceMonths,
-        display: `${experienceYears}y ${experienceMonths}m`
-      });
-      
       return {
         ...exp,
         current: current,
-        experienceYears: experienceYears,
-        experienceMonths: experienceMonths
+        experienceYears: this.calculateExperienceYears(exp),
+        experienceMonths: this.calculateExperienceMonths(exp)
       };
     });
-    
-    console.log('📊 Total experience calculation:', {
-      totalYears: this.totalExperienceYears,
-      totalMonths: this.totalExperienceMonths,
-      display: `${this.totalExperienceYears}y ${this.totalExperienceMonths}m`
-    });
-    
-    console.log('✅ ExperienceTimelineComponent: ngOnInit completed');
+
+    // Group consecutive jobs at the same company together
+    this.groupedExperiences = this.groupExperiences(experiences);
+
+    this.visibleItems = new Array(this.groupedExperiences.length).fill(false);
+    this.splashActive = new Array(this.groupedExperiences.length).fill(false);
+
+    // Prepare live career timing calculations
+    this.calculateCompletedExperienceMs(experiences);
+    this.startLiveTimer();
   }
 
-  get totalExperienceYears(): number {
-    const totalMonths = this.experiences.reduce((total, exp) => total + this.getExperienceMonths(exp), 0);
-    const years = Math.floor(totalMonths / 12);
-    console.log(`📊 Total experience calculation:`, {
-      totalMonths: totalMonths,
-      years: years,
-      months: totalMonths % 12
-    });
-    return years;
+  ngAfterViewInit() {
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const idx = Array.from(this.timelineItems.toArray()).findIndex(
+                item => item.nativeElement === entry.target
+              );
+              if (idx !== -1) {
+                setTimeout(() => {
+                  this.visibleItems[idx] = true;
+                }, idx * 80);
+              }
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      );
+
+      this.timelineItems.forEach(item => {
+        observer.observe(item.nativeElement);
+      });
+    } else {
+      this.visibleItems = this.visibleItems.map(() => true);
+    }
+
+    // Start traveler sequential journey animation
+    setTimeout(() => {
+      this.runTravelerLoop();
+    }, 1200);
   }
 
-  get totalExperienceMonths(): number {
-    const totalMonths = this.experiences.reduce((total, exp) => total + this.getExperienceMonths(exp), 0);
-    const months = totalMonths % 12;
-    console.log(`📊 Total months:`, months);
-    return months;
+  ngOnDestroy() {
+    this.isDestroyed = true;
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
+  }
+
+  private groupExperiences(positions: any[]): GroupedExperience[] {
+    const grouped: GroupedExperience[] = [];
+    
+    positions.forEach(pos => {
+      const lastGroup = grouped[grouped.length - 1];
+      
+      if (lastGroup && lastGroup.company === pos.company) {
+        lastGroup.positions.push(pos);
+        if (pos.current) lastGroup.current = true;
+      } else {
+        grouped.push({
+          company: pos.company,
+          location: pos.location,
+          branchColor: pos.branchColor,
+          current: !!pos.current,
+          duration: '',
+          positions: [pos]
+        });
+      }
+    });
+
+    grouped.forEach(group => {
+      const oldestPos = group.positions[group.positions.length - 1];
+      const newestPos = group.positions[0];
+      
+      const startStr = oldestPos.duration.split(' - ')[0];
+      const endStr = newestPos.duration.split(' - ')[1] || 'Present';
+      
+      group.duration = `${startStr} - ${endStr}`;
+    });
+
+    return grouped;
+  }
+
+  calculateCompletedExperienceMs(experiences: ExperiencePosition[]) {
+    this.completedMs = 0;
+    experiences.forEach(exp => {
+      if (exp.endDate) {
+        this.completedMs += (exp.endDate.getTime() - exp.startDate.getTime());
+      } else {
+        this.activeStartDate = exp.startDate;
+      }
+    });
+  }
+
+  startLiveTimer() {
+    const msInYear = 31557600000;
+    const msInMonth = 2629800000;
+    const msInDay = 86400000;
+    const msInHour = 3600000;
+    const msInMinute = 60000;
+    const msInSecond = 1000;
+
+    this.timerId = setInterval(() => {
+      let activeMs = 0;
+      if (this.activeStartDate) {
+        activeMs = Date.now() - this.activeStartDate.getTime();
+      }
+
+      const totalMs = this.completedMs + activeMs;
+      const fracYears = totalMs / msInYear;
+      this.liveFractionalYears = fracYears.toFixed(8);
+
+      let rem = totalMs;
+      this.liveY = Math.floor(rem / msInYear);
+      rem %= msInYear;
+      this.liveM = Math.floor(rem / msInMonth);
+      rem %= msInMonth;
+      this.liveD = Math.floor(rem / msInDay);
+      rem %= msInDay;
+      this.liveH = Math.floor(rem / msInHour);
+      rem %= msInHour;
+      this.liveMin = Math.floor(rem / msInMinute);
+      rem %= msInMinute;
+      this.liveS = Math.floor(rem / msInSecond);
+    }, 100);
+  }
+
+  // Traveler Arrow and Radar Splash sequential loops
+  async runTravelerLoop() {
+    const container = this.el.nativeElement.querySelector('.timeline-container');
+    const items = this.el.nativeElement.querySelectorAll('.timeline-item');
+
+    if (!container || items.length === 0 || this.isDestroyed) return;
+
+    // Use offsetTop measurements: robust, constant, and immune to scroll/transforms
+    const calculateTops = () => {
+      return Array.from(items).map((item: any) => {
+        // Node vertical center is at exactly item.offsetTop + 14px
+        return item.offsetTop + 14;
+      });
+    };
+
+    let nodeTops = calculateTops();
+
+    // Re-adjust node coordinates on resize
+    window.addEventListener('resize', () => {
+      if (!this.isDestroyed) {
+        nodeTops = calculateTops();
+      }
+    });
+
+    const animateJourney = async () => {
+      if (this.isDestroyed || nodeTops.length < 2) return;
+
+      // Dynamic recalculate of tops at beginning of loop (handles initial layout changes)
+      nodeTops = calculateTops();
+      const oldestIdx = nodeTops.length - 1;
+      
+      // Step 1: Align traveler with the oldest node (at the bottom)
+      this.travelerTransition = 'none';
+      this.travelerTop = nodeTops[oldestIdx];
+      this.travelerOpacity = 0;
+
+      await this.sleep(300);
+      if (this.isDestroyed) return;
+      this.travelerOpacity = 1;
+
+      await this.sleep(300);
+      if (this.isDestroyed) return;
+
+      // Trigger kick-off splash at bottom node
+      this.triggerSplash(oldestIdx);
+      await this.sleep(600);
+
+      // Step 2: Travel sequentially upwards
+      for (let j = oldestIdx - 1; j >= 0; j--) {
+        if (this.isDestroyed) return;
+
+        const distance = Math.abs(this.travelerTop - nodeTops[j]);
+        // Set transition duration proportional to distance
+        const travelDuration = Math.max(0.5, Math.min(1.2, distance / 250));
+
+        this.travelerTransition = `top ${travelDuration}s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s`;
+        this.travelerTop = nodeTops[j];
+
+        // Wait for traveler to slide into the target node
+        await this.sleep(travelDuration * 1000);
+        if (this.isDestroyed) return;
+
+        // Trigger radar splash rings on this milestone
+        this.triggerSplash(j);
+        
+        // Wait at the node to let the splash animation run
+        await this.sleep(600);
+      }
+
+      // Step 3: Fade out at the top of the timeline
+      this.travelerOpacity = 0;
+      await this.sleep(1000);
+
+      // Repeat after 4 seconds of idle time
+      if (!this.isDestroyed) {
+        setTimeout(animateJourney, 4000);
+      }
+    };
+
+    animateJourney();
+  }
+
+  private triggerSplash(idx: number) {
+    if (this.isDestroyed) return;
+    this.splashActive[idx] = true;
+    setTimeout(() => {
+      if (!this.isDestroyed) {
+        this.splashActive[idx] = false;
+      }
+    }, 1000);
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   calculateExperienceYears(exp: ExperiencePosition): number {
-    const totalMonths = this.calculateExperienceMonths(exp);
-    return Math.floor(totalMonths / 12);
+    return Math.floor(this.calculateExperienceMonths(exp) / 12);
   }
 
   calculateExperienceMonths(exp: ExperiencePosition): number {
-    const endDate = exp.endDate || new Date(); // Use current date if no endDate (current position)
+    const endDate = exp.endDate || new Date();
     const startDate = exp.startDate;
-    
-    console.log(`🔢 Calculating months for ${exp.company}:`, {
-      startDate: startDate.toDateString(),
-      endDate: endDate.toDateString(),
-      isCurrent: !exp.endDate
-    });
-    
-    // Calculate month difference more accurately
+
     const yearDiff = endDate.getFullYear() - startDate.getFullYear();
     const monthDiff = endDate.getMonth() - startDate.getMonth();
     let totalMonths = yearDiff * 12 + monthDiff;
-    
-    console.log(`📅 Month calculation:`, {
-      yearDiff: yearDiff,
-      monthDiff: monthDiff,
-      initialTotalMonths: totalMonths
-    });
-    
-    // Add 1 to include the current month (inclusive counting)
+
     totalMonths += 1;
-    
-    console.log(`➕ After adding 1 (inclusive):`, totalMonths);
-    
-    // Adjust for day of month - if we haven't reached the same day of the month, subtract 1
+
     if (endDate.getDate() < startDate.getDate()) {
       totalMonths -= 1;
-      console.log(`➖ Subtracted 1 (day adjustment):`, totalMonths);
-    } else {
-      console.log(`✅ No day adjustment needed`);
     }
-    
-    console.log(`🎯 Final months for ${exp.company}:`, totalMonths);
+
     return totalMonths;
   }
 
-  getExperienceYears(exp: ExperiencePosition): number {
-    return this.calculateExperienceYears(exp);
-  }
-
-  getExperienceMonths(exp: ExperiencePosition): number {
-    return this.calculateExperienceMonths(exp);
-  }
-
-  getMergeMessage(exp: ExperiencePosition): string {
-    // Calculate years and months properly
-    const totalMonths = this.getExperienceMonths(exp);
+  getExperienceDurationText(exp: ExperiencePosition): string {
+    const totalMonths = this.calculateExperienceMonths(exp);
     const years = Math.floor(totalMonths / 12);
     const months = totalMonths % 12;
-    
-    console.log(`🔗 Merge message for ${exp.company}:`, {
-      totalMonths: totalMonths,
-      years: years,
-      months: months,
-      display: `${years}y ${months}m`
-    });
-    
-    if (!this.config?.timeline.mergeMessage) {
-      const message = `Merging ${years}y ${months}m to career`;
-      console.log(`📝 Default merge message:`, message);
-      return message;
-    }
-    
-    const message = this.config.timeline.mergeMessage
-      .replace('{years}', years.toString())
-      .replace('{months}', months.toString());
-    
-    console.log(`📝 Custom merge message:`, message);
-    return message;
-  }
 
-  getTotalExperienceText(): string {
-    if (!this.config?.timeline.totalExperience) {
-      return `Total Career Experience: ${this.totalExperienceYears}y ${this.totalExperienceMonths}m`;
-    }
-    
-    return this.config.timeline.totalExperience
-      .replace('{years}', this.totalExperienceYears.toString())
-      .replace('{months}', this.totalExperienceMonths.toString());
-  }
-
-  getFeatureBranchesText(): string {
-    // Count completed positions (inactive/merged)
-    const completedPositions = this.experiences.filter(exp => !exp.current);
-    const completedCount = completedPositions.length;
-    
-    // Count current positions (in progress)
-    const currentPositions = this.experiences.filter(exp => exp.current);
-    const currentCount = currentPositions.length;
-    
-    console.log(`🌿 Feature branches calculation:`, {
-      completedPositions: completedPositions.map(p => p.company),
-      completedCount: completedCount,
-      currentPositions: currentPositions.map(p => p.company),
-      currentCount: currentCount
-    });
-    
-    if (currentCount > 0) {
-      const message = `${completedCount} feature branches merged into career, ${currentCount} in progress`;
-      console.log(`📝 Feature branches message:`, message);
-      return message;
+    if (years > 0 && months > 0) {
+      return `${years} yr ${months} mo`;
+    } else if (years > 0) {
+      return `${years} yr`;
     } else {
-      const message = `${completedCount} feature branches merged into career`;
-      console.log(`📝 Feature branches message:`, message);
-      return message;
+      return `${months} mo`;
     }
-  }
-
-  onExperienceHover(experienceId: string) {
-    console.log(`🖱️ Hover started on experience:`, experienceId);
-    this.hoveredExperience = experienceId;
-    
-    // Find the experience and get its branch color
-    const experience = this.experiences.find(exp => exp.id === experienceId);
-    if (experience) {
-      this.hoveredBranchColor = experience.branchColor;
-      console.log(`🎨 Branch color for hover:`, this.hoveredBranchColor);
-    }
-  }
-
-  onExperienceLeave() {
-    console.log(`🖱️ Hover ended`);
-    this.hoveredExperience = null;
-    this.hoveredBranchColor = null;
-  }
-
-  getBranchName(company: string): string {
-    return company.toLowerCase().replace(/\s+/g, '-');
   }
 }
