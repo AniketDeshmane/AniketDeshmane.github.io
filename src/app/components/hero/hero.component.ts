@@ -18,6 +18,14 @@ import { AppConfigService, HeroConfig } from '../../shared/config/app-config';
       <div class="container mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10 py-20 sm:py-24 lg:py-32">
         <div class="max-w-3xl mx-auto animate-fade-in">
 
+          <!-- Open to Opportunities Badge -->
+          <div class="mb-6 flex justify-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-semibold tracking-wide">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Open to opportunities
+            </div>
+          </div>
+
           <!-- Heading -->
           <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground mb-5 sm:mb-6">
             {{ config?.title || 'Aniket Deshmane' }}

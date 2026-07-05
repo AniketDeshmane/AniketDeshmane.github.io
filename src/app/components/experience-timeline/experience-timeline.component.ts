@@ -43,7 +43,9 @@ interface GroupedExperience {
               </span>
               
               <!-- Ticking Decimal Counter -->
-              <div class="text-3xl sm:text-4xl font-black text-primary tracking-tight font-mono tabular-nums mb-1">
+              <div 
+                class="text-3xl sm:text-4xl font-black text-primary tracking-tight font-mono tabular-nums mb-1 cursor-help"
+                title="Counting total career time from Jan 2021 (Exaosis) to present">
                 {{ liveFractionalYears }} <span class="text-sm font-bold text-muted-foreground uppercase">yrs</span>
               </div>
               
