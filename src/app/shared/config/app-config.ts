@@ -53,6 +53,7 @@ export interface ExperiencePosition {
   branchColor: string;
   experienceYears?: number; // Optional - will be calculated dynamically
   experienceMonths?: number; // Optional - will be calculated dynamically
+  techStack?: string[]; // Technologies used in this role
 }
 
 export interface ExperienceTimelineConfig {
@@ -245,7 +246,8 @@ export class AppConfigService {
             "ASP.NET Web API and Amazon Simple Notification Service (SNS)"
           ],
           startDate: new Date("2026-03-01"),
-          branchColor: "#10b981"
+          branchColor: "#10b981",
+          techStack: [".NET Core", "AWS", "SNS", "C#", "Web API"]
         },
         {
           id: "q7r8s9t0",
@@ -259,7 +261,8 @@ export class AppConfigService {
           ],
           startDate: new Date("2024-12-01"),
           endDate: new Date("2026-03-01"),
-          branchColor: "#10b981"
+          branchColor: "#10b981",
+          techStack: ["Microservices", ".NET Core", "C#"]
         },
         {
           id: "e5f6g7h8",
@@ -277,7 +280,8 @@ export class AppConfigService {
           ],
           startDate: new Date("2023-05-01"),
           endDate: new Date("2024-11-30"),
-          branchColor: "#f59e0b"
+          branchColor: "#f59e0b",
+          techStack: ["Angular", ".NET 6", "Docker", "SQL", "WeChat API"]
         },
         {
           id: "i9j0k1l2",
@@ -293,7 +297,8 @@ export class AppConfigService {
           ],
           startDate: new Date("2021-04-01"),
           endDate: new Date("2023-05-31"),
-          branchColor: "#3b82f6"
+          branchColor: "#3b82f6",
+          techStack: ["ASP.NET", "MVC 5", "Web API", "C#", "WebForms"]
         },
         {
           id: "m3n4o5p6",
@@ -304,7 +309,8 @@ export class AppConfigService {
           description: ["Worked on Frontend development"],
           startDate: new Date("2021-01-01"),
           endDate: new Date("2021-02-28"),
-          branchColor: "#8b5cf6"
+          branchColor: "#8b5cf6",
+          techStack: [".NET", "Frontend"]
         }
       ]
     },

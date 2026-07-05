@@ -9,6 +9,7 @@ interface GroupedExperience {
   current: boolean;
   duration: string;
   positions: ExperiencePosition[];
+  techStack: string[];
 }
 
 @Component({
@@ -128,7 +129,10 @@ interface GroupedExperience {
             </div>
 
             <!-- Experience Card (grouped by company) -->
-            <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:shadow-card-hover hover:border-primary/20 transition-all duration-300 transform hover:-translate-y-0.5">
+            <div 
+              class="bg-card border border-border rounded-2xl p-6 sm:p-8 hover:shadow-card-hover hover:border-primary/20 transition-all duration-300 transform hover:-translate-y-0.5"
+              (mouseenter)="hoveredCardIndex = i"
+              (mouseleave)="hoveredCardIndex = null">
               
               <!-- Company Header Info -->
               <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border/60 pb-4 mb-4">
@@ -212,6 +216,21 @@ interface GroupedExperience {
                 </div>
               </div>
 
+              <!-- Tech Stack Hover Row -->
+              <div 
+                class="tech-stack-row flex flex-wrap gap-2 pt-3 border-t border-border/40 mt-4"
+                [class.tech-stack-visible]="hoveredCardIndex === i">
+                <span 
+                  *ngFor="let tech of group.techStack; let ti = index"
+                  class="tech-badge inline-flex items-center text-[11px] font-bold px-2.5 py-1 rounded-full border"
+                  [style.color]="group.branchColor"
+                  [style.borderColor]="group.branchColor + '30'"
+                  [style.backgroundColor]="group.branchColor + '0a'"
+                  [style.transitionDelay]="(ti * 60) + 'ms'">
+                  {{ tech }}
+                </span>
+              </div>
+
             </div>
 
           </div>
@@ -240,6 +259,44 @@ interface GroupedExperience {
     .animate-radar-splash-delayed {
       animation: radar-splash 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
     }
+
+    /* Tech stack hover animation */
+    .tech-stack-row {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      padding-top: 0;
+      margin-top: 0;
+      border-top-width: 0;
+      transition: max-height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.3s ease,
+                  padding-top 0.3s ease,
+                  margin-top 0.3s ease,
+                  border-top-width 0.3s ease;
+    }
+
+    .tech-stack-row.tech-stack-visible {
+      max-height: 120px;
+      opacity: 1;
+      padding-top: 0.75rem;
+      margin-top: 1rem;
+      border-top-width: 1px;
+    }
+
+    .tech-badge {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .tech-stack-visible .tech-badge {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tech-stack-visible .tech-badge:hover {
+      transform: translateY(-2px);
+    }
   `]
 })
 export class ExperienceTimelineComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -247,6 +304,7 @@ export class ExperienceTimelineComponent implements OnInit, AfterViewInit, OnDes
   groupedExperiences: GroupedExperience[] = [];
   rawPositionsCount = 0;
   visibleItems: boolean[] = [];
+  hoveredCardIndex: number | null = null;
 
   // Live Counter state
   liveFractionalYears = '0.00000000';
@@ -346,6 +404,14 @@ export class ExperienceTimelineComponent implements OnInit, AfterViewInit, OnDes
       if (lastGroup && lastGroup.company === pos.company) {
         lastGroup.positions.push(pos);
         if (pos.current) lastGroup.current = true;
+        // Merge tech stacks (deduplicated)
+        if (pos.techStack) {
+          pos.techStack.forEach((tech: string) => {
+            if (!lastGroup.techStack.includes(tech)) {
+              lastGroup.techStack.push(tech);
+            }
+          });
+        }
       } else {
         grouped.push({
           company: pos.company,
@@ -353,7 +419,8 @@ export class ExperienceTimelineComponent implements OnInit, AfterViewInit, OnDes
           branchColor: pos.branchColor,
           current: !!pos.current,
           duration: '',
-          positions: [pos]
+          positions: [pos],
+          techStack: pos.techStack ? [...pos.techStack] : []
         });
       }
     });
