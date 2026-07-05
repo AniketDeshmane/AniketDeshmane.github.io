@@ -239,7 +239,7 @@ export class AppConfigService {
         {
           id: "a1b2c3d4",
           company: "OneRock Infotech",
-          position: "Software Engineer",
+          position: "Senior Software Developer",
           duration: "Nov 2024 - Present",
           location: "Mumbai · Hybrid",
           description: [
@@ -287,6 +287,21 @@ export class AppConfigService {
           endDate: new Date("2023-05-01"),
           branchColor: "#3b82f6",
           techStack: ["ASP.NET MVC", "Azure Web Apps", "Git", "SQL"]
+        },
+        {
+          id: "i9j0k1l2",
+          company: "Exaosis",
+          position: ".NET Developer",
+          duration: "Jan 2021 - Apr 2021",
+          location: "Mumbai · Remote",
+          description: [
+            "Part of the backend team developing internal projects",
+            "Worked heavily on Azure basics and deployment practices"
+          ],
+          startDate: new Date("2021-01-01"),
+          endDate: new Date("2021-04-30"),
+          branchColor: "#8b5cf6",
+          techStack: [".NET", "Azure", "Backend Development"]
         }
       ]
     },

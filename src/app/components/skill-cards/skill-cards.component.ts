@@ -50,7 +50,7 @@ interface SkillCategoryMapped {
     lucideZap
   })],
   template: `
-    <section class="py-24 bg-secondary/15 relative overflow-hidden">
+    <section id="skills" class="py-24 bg-secondary/15 relative overflow-hidden">
       <div class="max-w-6xl mx-auto px-6 sm:px-8">
         
         <!-- Section Header -->
