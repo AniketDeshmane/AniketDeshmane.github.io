@@ -183,7 +183,7 @@ interface GroupedExperience {
                   <!-- Role Title & Sub-duration -->
                   <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
                     <h4 class="text-lg font-bold text-foreground leading-tight">{{ exp.position }}</h4>
-                    <span class="text-xs text-muted-foreground font-semibold">
+                    <span *ngIf="group.positions.length > 1" class="text-xs text-muted-foreground font-semibold">
                       {{ exp.duration }}
                     </span>
                   </div>
