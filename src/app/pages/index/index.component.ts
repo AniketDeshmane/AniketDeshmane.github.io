@@ -29,34 +29,33 @@ import { HostListener, Inject, PLATFORM_ID } from '@angular/core';
         <app-contact></app-contact>
       </main>
 
-      <!-- Floating Actions -->
+      <!-- Floating Action Buttons -->
       <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">
         
-        <!-- Back to Top Button -->
+        <!-- Back to Top -->
         <button 
           *ngIf="showBackToTop"
           (click)="scrollToTop()"
           class="w-10 h-10 rounded-full bg-secondary/80 backdrop-blur-sm text-foreground border border-border shadow-soft flex items-center justify-center hover:bg-secondary hover:text-primary transition-all duration-300 pointer-events-auto animate-fade-in"
           aria-label="Back to top">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m18 15-6-6-6 6"/>
           </svg>
         </button>
 
-        <!-- Resume Download Button -->
+        <!-- Resume Download -->
         <a 
-          href="/assets/resume.pdf" 
+          href="/assets/Resume.docx" 
           target="_blank"
           download
           class="group flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-full shadow-elevated hover:shadow-glow hover:-translate-y-1 transition-all duration-300 pointer-events-auto">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:animate-bounce">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" x2="12" y1="15" y2="3"></line>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:animate-bounce">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" x2="12" y1="15" y2="3"/>
           </svg>
           <span class="font-semibold text-sm tracking-wide">Resume</span>
         </a>
-
       </div>
     </div>
   `,

@@ -222,7 +222,7 @@ export class AppConfigService {
       ],
       cta: {
         text: "Download Resume",
-        url: "/assets/resume.pdf"
+        url: "/assets/Resume.docx"
       }
     },
     experience: {
@@ -238,79 +238,55 @@ export class AppConfigService {
       positions: [
         {
           id: "a1b2c3d4",
-          company: "OneRock IT Services Private Limited",
-          position: "Senior Software Engineer",
-          duration: "Mar 2026 - Present",
-          location: "Mumbai, Maharashtra, India · Hybrid",
-          description: [
-            "ASP.NET Web API and Amazon Simple Notification Service (SNS)"
-          ],
-          startDate: new Date("2026-03-01"),
-          branchColor: "#10b981",
-          techStack: [".NET Core", "AWS", "SNS", "C#", "Web API"]
-        },
-        {
-          id: "q7r8s9t0",
-          company: "OneRock IT Services Private Limited",
+          company: "OneRock Infotech",
           position: "Software Engineer",
-          duration: "Dec 2024 - Mar 2026",
-          location: "Mumbai, Maharashtra, India · Hybrid",
+          duration: "Nov 2024 - Present",
+          location: "Mumbai · Hybrid",
           description: [
-            "Working as a consultant for Blackstone",
-            "Microservices and .NET Core"
+            "Developed and integrated microservices in .NET 8, leveraging Autofac for dependency injection, Quartz Scheduler for internal cache refresh, and FIX protocol integration with the proprietary trading software to enable seamless communication with the FIX engine.",
+            "Implemented asynchronous communication between microservices using Amazon SQS and SNS, ensuring high scalability and reliability.",
+            "Assisted in debugging UI issues, performing root cause analysis, and validating end-to-end test flows to ensure smooth application performance.",
+            "Followed best coding practices and wrote clean, testable, and maintainable code with maximum unit test coverage.",
+            "Worked in a cloud-native environment using AWS, ECS, Linux, SQL, and Splunk for monitoring and deployment."
           ],
-          startDate: new Date("2024-12-01"),
-          endDate: new Date("2026-03-01"),
+          startDate: new Date("2024-11-01"),
           branchColor: "#10b981",
-          techStack: ["Microservices", ".NET Core", "C#"]
+          current: true,
+          techStack: [".NET 8", "Autofac", "Quartz", "SQS/SNS", "FIX Protocol", "ECS", "AWS", "SQL", "Splunk", "Linux"]
         },
         {
-          id: "e5f6g7h8",
-          company: "Enago (Crimson Interactive)",
+          id: "d4e5f6g7",
+          company: "Crimson Interactive",
           position: "Software Engineer",
           duration: "May 2023 - Nov 2024",
-          location: "Mumbai, Maharashtra, India · Hybrid",
+          location: "Mumbai · Hybrid",
           description: [
-            "Revamped AfterSales module, boosting aftersales by 50% and improving user experience",
-            "Built UI in Angular 12 and APIs in .NET 6 on Docker",
-            "Created BI/BA dashboard to track inquiries and conversions for stakeholders",
-            "Integrated API into marketing page, reducing group account creation time and implementing backend security (blacklisting, rate limiting, authentication)",
-            "Developed WeChat API enabling Chinese users to check inquiry status via WeChat",
-            "Optimized Fapiao service APIs, cutting redundant calls and saving annual tax per request"
+            "Revamped the existing AfterSales module, resulting in a 50% increase in aftersales and improved user experience. Developed the UI using Angular 12 and the backend with .NET 6 Core, APIs running on docker.",
+            "Developed an Angular-based UI dashboard for BI and BA stakeholders, providing timely insights into inquiries and assignments. The dashboard tracks the progress of inquiries converted into potential clients.",
+            "Developed an API and integrated it into the marketing page, reducing the time for users to create a group account. Implemented backend security measures including blacklisting, rate limiting, and authentication for the API.",
+            "Developed a WeChat API for the external team, enabling Chinese users to check the status of their inquiries or assignments via WeChat.",
+            "Reduced redundant API calls in the existing Fapiao invoice Windows service, leading to an annual cost reduction of ¥5,000 in tax."
           ],
           startDate: new Date("2023-05-01"),
-          endDate: new Date("2024-11-30"),
+          endDate: new Date("2024-11-01"),
           branchColor: "#f59e0b",
-          techStack: ["Angular", ".NET 6", "Docker", "SQL", "WeChat API"]
+          techStack: ["ASP.NET MVC", "4.5X Framework", ".NET Core 6", "Angular 12", "Docker", "Linux", "AWS", "SQL", "Kibana"]
         },
         {
-          id: "i9j0k1l2",
+          id: "g7h8i9j0",
           company: "Tata Consultancy Services",
-          position: "Assistant System Engineer",
-          duration: "Apr 2021 - May 2023",
-          location: "India · Remote",
+          position: "Assistant Software Engineer",
+          duration: "April 2021 - May 2023",
+          location: "Hyderabad · Remote",
           description: [
-            "Enhancement/Development of WebApps using ASP.NET",
-            "WebAPI development",
-            "ASP.NET MVC 5 implementation",
-            "Webforms development"
+            "Developed in-house web applications using DotNet Core and MVC Framework, and implemented OAuth for MailSent via Azure App Registration and MailKit.",
+            "Worked on complex SQL stored procedures, views, SSIS packages, and SQL jobs, making code changes as per client and business requirements.",
+            "Deployed code changes to the IIS server using NANT/Git tools."
           ],
           startDate: new Date("2021-04-01"),
-          endDate: new Date("2023-05-31"),
+          endDate: new Date("2023-05-01"),
           branchColor: "#3b82f6",
-          techStack: ["ASP.NET", "MVC 5", "Web API", "C#", "WebForms"]
-        },
-        {
-          id: "m3n4o5p6",
-          company: "Exaosis",
-          position: ".NET Developer",
-          duration: "Jan 2021 - Feb 2021",
-          location: "India",
-          description: ["Worked on Frontend development"],
-          startDate: new Date("2021-01-01"),
-          endDate: new Date("2021-02-28"),
-          branchColor: "#8b5cf6",
-          techStack: [".NET", "Frontend"]
+          techStack: ["ASP.NET MVC", "Azure Web Apps", "Git", "SQL"]
         }
       ]
     },
@@ -319,108 +295,63 @@ export class AppConfigService {
       subtitle: "Technologies and tools I work with",
       categories: [
         {
-          name: "Frontend",
+          name: "Frameworks",
           skills: [
-            {
-              name: "Angular",
-              level: 90,
-              icon: "angular"
-            },
-            {
-              name: "TypeScript",
-              level: 85,
-              icon: "typescript"
-            },
-            {
-              name: "JavaScript",
-              level: 90,
-              icon: "javascript"
-            },
-            {
-              name: "HTML/CSS",
-              level: 95,
-              icon: "html5"
-            },
-            {
-              name: "React",
-              level: 70,
-              icon: "react"
-            }
+            { name: ".NET 8", level: 90, icon: "lucideLayers" },
+            { name: "ASP.NET Core", level: 90, icon: "lucideServer" },
+            { name: "MVC Core", level: 90, icon: "lucideLayoutTemplate" },
+            { name: "Entity Framework Core", level: 90, icon: "lucideDatabase" },
+            { name: "Dapper", level: 90, icon: "lucideZap" },
+            { name: "Quartz", level: 90, icon: "lucideClock" }
           ]
         },
         {
-          name: "Backend",
+          name: "Front-End",
           skills: [
-            {
-              name: ".NET Core",
-              level: 85,
-              icon: "dotnet"
-            },
-            {
-              name: "C#",
-              level: 90,
-              icon: "csharp"
-            },
-            {
-              name: "ASP.NET",
-              level: 85,
-              icon: "aspnet"
-            },
-            {
-              name: "Web API",
-              level: 90,
-              icon: "api"
-            },
-            {
-              name: "Entity Framework",
-              level: 80,
-              icon: "ef"
-            }
+            { name: "Angular 12+", level: 90, icon: "lucideLayout" },
+            { name: "TypeScript", level: 90, icon: "lucideCode2" },
+            { name: "HTML5", level: 90, icon: "lucideFileCode" },
+            { name: "CSS3", level: 90, icon: "lucidePalette" },
+            { name: "WPF", level: 90, icon: "lucideMonitor" }
+          ]
+        },
+        {
+          name: "Back-End",
+          skills: [
+            { name: "C#", level: 90, icon: "lucideTerminal" },
+            { name: "Microservices", level: 90, icon: "lucideNetwork" },
+            { name: "WCF", level: 90, icon: "lucideShare2" },
+            { name: "FIX Protocol", level: 90, icon: "lucideActivity" },
+            { name: "RESTful APIs", level: 90, icon: "lucideWebhook" },
+            { name: "T-SQL", level: 90, icon: "lucideDatabase" }
+          ]
+        },
+        {
+          name: "DevOps & Tools",
+          skills: [
+            { name: "Docker", level: 90, icon: "lucideBox" },
+            { name: "ECS", level: 90, icon: "lucideCloud" },
+            { name: "Ubuntu/Linux", level: 90, icon: "lucideTerminal" },
+            { name: "Git", level: 90, icon: "lucideGitBranch" },
+            { name: "TFS", level: 90, icon: "lucideGitMerge" },
+            { name: "Splunk", level: 90, icon: "lucideLineChart" }
           ]
         },
         {
           name: "Database",
           skills: [
-            {
-              name: "SQL Server",
-              level: 85,
-              icon: "sqlserver"
-            },
-            {
-              name: "MySQL",
-              level: 75,
-              icon: "mysql"
-            },
-            {
-              name: "MongoDB",
-              level: 70,
-              icon: "mongodb"
-            }
+            { name: "MS SQL Server", level: 90, icon: "lucideDatabase" },
+            { name: "MySQL", level: 90, icon: "lucideDatabase" },
+            { name: "SQLite", level: 90, icon: "lucideDatabase" },
+            { name: "DynamoDB", level: 90, icon: "lucideDatabase" },
+            { name: "LINQ", level: 90, icon: "lucideCode" }
           ]
         },
         {
-          name: "Tools & Others",
+          name: "Cloud & Messaging",
           skills: [
-            {
-              name: "Git",
-              level: 90,
-              icon: "git"
-            },
-            {
-              name: "Docker",
-              level: 75,
-              icon: "docker"
-            },
-            {
-              name: "Azure",
-              level: 70,
-              icon: "azure"
-            },
-            {
-              name: "AWS",
-              level: 65,
-              icon: "aws"
-            }
+            { name: "AWS (SQS, SNS, ECS)", level: 90, icon: "lucideCloud" },
+            { name: "Azure (Web Apps)", level: 90, icon: "lucideCloud" }
           ]
         }
       ]
