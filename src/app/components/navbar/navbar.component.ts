@@ -47,8 +47,9 @@ import { ThemeService } from '../../shared/services/theme.service';
         <!-- Right Actions: Theme Toggle -->
         <div class="flex items-center gap-4">
           <button 
+            type="button"
             (click)="toggleTheme()"
-            class="w-9 h-9 flex items-center justify-center rounded-full bg-secondary/50 text-foreground hover:bg-secondary transition-colors"
+            class="w-9 h-9 flex items-center justify-center rounded-full bg-secondary/50 text-foreground hover:bg-secondary transition-colors cursor-pointer"
             aria-label="Toggle Dark Mode">
             <!-- Sun Icon (shows in dark mode) -->
             <svg *ngIf="isDarkMode" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

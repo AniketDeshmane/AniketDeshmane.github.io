@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -9,7 +10,10 @@ export class ThemeService {
   private _isDarkMode = new BehaviorSubject<boolean>(false);
   public isDarkMode$ = this._isDarkMode.asObservable();
 
-  constructor() {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.initTheme();
   }
 
@@ -41,14 +45,21 @@ export class ThemeService {
 
   private setDarkMode(isDark: boolean) {
     this._isDarkMode.next(isDark);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(this.THEME_KEY, isDark ? 'dark' : 'light');
-      
-      const htmlElement = document.documentElement;
-      if (isDark) {
-        htmlElement.classList.add('dark');
-      } else {
-        htmlElement.classList.remove('dark');
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        localStorage.setItem(this.THEME_KEY, isDark ? 'dark' : 'light');
+        const htmlElement = this.document.documentElement;
+        const bodyElement = this.document.body;
+        
+        if (isDark) {
+          htmlElement.classList.add('dark');
+          if (bodyElement) bodyElement.classList.add('dark');
+        } else {
+          htmlElement.classList.remove('dark');
+          if (bodyElement) bodyElement.classList.remove('dark');
+        }
+      } catch (e) {
+        console.error('Theme toggle failed', e);
       }
     }
   }
