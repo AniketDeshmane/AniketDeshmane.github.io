@@ -4,33 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LinkedIn Experience Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 2rem; }
-        h1 { color: #0a66c2; }
-        .hero { background: #f3f2ef; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; }
-        .btn { display: inline-block; background: #0a66c2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 24px; font-weight: bold; margin-top: 1rem; }
-        .btn:hover { background: #004182; }
+        body { 
+            font-family: 'Patrick Hand', cursive; 
+            font-size: 1.2rem;
+            line-height: 1.6; 
+            color: #1a1a1a; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 2rem; 
+            background-color: #fafafa;
+        }
+        h1, h2, h3 { 
+            font-family: 'Caveat', cursive; 
+            color: #2c3e50; 
+            margin-bottom: 0.5rem;
+        }
+        h1 { font-size: 3rem; text-align: center; }
+        h2 { font-size: 2.2rem; border-bottom: 2px dashed #ccc; padding-bottom: 10px; }
+        
+        .sketch-box { 
+            background: #fff; 
+            padding: 2rem; 
+            margin-bottom: 2rem; 
+            /* Hand-drawn sketchy border effect */
+            border: 3px solid #2c3e50; 
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+        
+        .hero { background: #ffeaa7; text-align: center; }
+        
+        .btn { 
+            display: inline-block; 
+            background: #74b9ff; 
+            color: #1a1a1a; 
+            padding: 12px 24px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 1.4rem;
+            margin-top: 1.5rem; 
+            border: 3px solid #2c3e50;
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            transition: all 0.2s ease;
+        }
+        .btn:hover { 
+            background: #0984e3; 
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0px #2c3e50;
+        }
+
+        .features {
+            list-style-type: none;
+            padding: 0;
+        }
+        .features li {
+            background: #81ecec;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 2px solid #2c3e50;
+            border-radius: 15px 225px 15px 255px/255px 15px 225px 15px;
+        }
+        .features li:nth-child(2) { background: #fab1a0; }
+        .features li:nth-child(3) { background: #a29bfe; color: #fff;}
+        .features li:nth-child(4) { background: #55efc4; }
+
+        img.arch-diagram {
+            width: 100%;
+            border: 3px solid #2c3e50;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+        }
+        
+        a { color: #0984e3; font-weight: bold; text-decoration: underline; text-decoration-style: wavy; }
+        a:hover { color: #d63031; }
+        
+        hr { border: none; border-top: 2px dashed #ccc; margin: 2rem 0; }
+        footer { text-align: center; color: #666; }
     </style>
 </head>
 <body>
-    <div class="hero">
+    <div class="sketch-box hero">
         <h1>LinkedIn Experience Calculator</h1>
         <p>Instantly calculate the total cumulative work experience and career start date for any LinkedIn profile, with smart overlapping-role deduplication.</p>
         <a href="https://chrome.google.com/webstore/detail/bipolcnnigjfefbcffdpnifdblejlgpo" class="btn">Add to Chrome</a>
     </div>
     
-    <h2>Features</h2>
-    <ul>
-        <li><strong>Instant Calculation:</strong> Calculates total experience flawlessly in milliseconds.</li>
-        <li><strong>Smart Deduplication:</strong> Automatically detects and merges overlapping roles so you never over-count concurrent jobs.</li>
-        <li><strong>Seamless Integration:</strong> Injects natively into the LinkedIn UI directly below the Experience header.</li>
-        <li><strong>Privacy First:</strong> No tracking, no external servers. Everything runs entirely inside your browser.</li>
+    <h2>How it Works</h2>
+    <p>Instead of relying on messy HTML scraping, the extension uses a clean Event-Driven architecture to fetch and calculate your data directly from the source!</p>
+    
+    <img src="../architecture.jpg" alt="Architecture Diagram" class="arch-diagram">
+
+    <h2>Awesome Features</h2>
+    <ul class="features">
+        <li><strong>⚡ Instant Calculation:</strong> Calculates total experience flawlessly in milliseconds.</li>
+        <li><strong>🧩 Smart Deduplication:</strong> Automatically detects and merges overlapping roles so you never over-count concurrent jobs.</li>
+        <li><strong>🔗 Seamless Integration:</strong> Injects natively into the LinkedIn UI directly below the Experience header.</li>
+        <li><strong>🔒 Privacy First:</strong> No tracking, no external servers. Everything runs entirely inside your browser.</li>
     </ul>
 
-    <h2>Privacy & Support</h2>
-    <p>We respect your privacy. View our <a href="../support">Support & Privacy Policy</a> for more details.</p>
+    <div class="sketch-box">
+        <h2>Privacy & Support</h2>
+        <p>We respect your privacy. View our <a href="../support">Support & Privacy Policy</a> for more details.</p>
+    </div>
     
     <hr>
-    <p><small>&copy; 2026 Aniket Deshmane. All rights reserved.</small></p>
+    <footer>
+        <p><small>&copy; 2026 Aniket Deshmane. All rights reserved.</small></p>
+    </footer>
 </body>
 </html>
