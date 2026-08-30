@@ -105,7 +105,13 @@
     <img src="../step_by_step.jpg" alt="Step by Step Comic" class="arch-diagram">
 
     <h2>Under the Hood</h2>
-    <p>For the tech nerds: The extension securely fetches the profile's Experience HTML in the background, extracts the dates using a specialized Regex Parser, and deduplicates the timeline locally in your browser!</p>
+    <div class="sketch-box" style="background: #fcf1d4;">
+        <p>Curious about what happens internally the millisecond you click that button? Here is the exact internal data flow:</p>
+        <p><strong>1. DOM Fetcher:</strong> The extension silently sends a background request to fetch the user's hidden Experience HTML.</p>
+        <p><strong>2. Regex Parser:</strong> A hyper-optimized Regular Expression scans the raw HTML to extract every single date range (e.g. "Jan 2020 - Present").</p>
+        <p><strong>3. Interval Engine:</strong> The engine converts all those dates into mathematical blocks. It sorts them chronologically and merges any overlapping pieces together!</p>
+        <p><strong>4. User Interface:</strong> The final, perfectly deduplicated total is injected back into your active LinkedIn window.</p>
+    </div>
     
     <img src="../architecture.jpg" alt="Architecture Diagram" class="arch-diagram">
 
