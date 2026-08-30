@@ -96,5 +96,10 @@
     <footer>
         <p><small>&copy; 2026 Aniket Deshmane. <a href="../homepage">Back to Homepage</a></small></p>
     </footer>
+    <script>
+        if (window.location.href.endsWith('index.html')) {
+            window.history.replaceState(null, '', window.location.href.replace('index.html', ''));
+        }
+    </script>
 </body>
 </html>
