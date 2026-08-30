@@ -42,7 +42,8 @@
                                                                                                                   "input":  "src/LinkedInExperienceCalculator",
                                                                                                                   "glob":  "**/*",
                                                                                                                   "output":  "LinkedInExperienceCalculator"
-                                                                                                              }
+                                                                                                              },
+                                                                                                              "src/google4cf7564f054336e4.html"
                                                                                                           ],
                                                                                                "styles":  [
                                                                                                               "src/styles.scss"
