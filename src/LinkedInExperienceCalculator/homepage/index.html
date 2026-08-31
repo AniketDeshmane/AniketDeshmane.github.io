@@ -93,7 +93,7 @@
     <div class="sketch-box hero">
         <h1>LinkedIn Experience Calculator</h1>
         <p>Instantly calculate the total cumulative work experience and career start date for any LinkedIn profile, with smart overlapping-role deduplication.</p>
-        <a href="https://chrome.google.com/webstore/detail/bipolcnnigjfefbcffdpnifdblejlgpo" class="btn">Add to Chrome</a>
+        <a href="https://chromewebstore.google.com/detail/linkedin-experience-calcu/bipolcnnigjfefbcffdpnifdblejlgpo" class="btn">⬇️ Add to Chrome — It's Free</a>
         
         <br><br>
         <p style="font-weight: bold; font-size: 1.5rem; margin-top: 1rem;">📺 Watch the Demo</p>
@@ -134,10 +134,76 @@
         <h2>Privacy & Support</h2>
         <p>We respect your privacy. View our <a href="../support">Support & Privacy Policy</a> for more details.</p>
     </div>
-    
+
+    <h2>Why I Built This</h2>
+    <div class="sketch-box" style="background: #fdf2e9;">
+        <p>I kept running into the same problem before every interview:</p>
+        <p>I'd visit a candidate's LinkedIn profile and see 8, 10, sometimes 15+ roles across multiple companies. Overlapping dates. Contract gigs. Parallel positions.</p>
+        <p><strong>And LinkedIn never shows you the total.</strong></p>
+        <p>So every single time, I'd sit there manually adding up the years and months, hoping I didn't double-count. It was painful. And it was the same problem every time.</p>
+        <p>So I decided to scratch my own itch and build a tiny tool that does it in one click. That's how <strong>LinkedIn Experience Calculator</strong> was born. 🎉</p>
+    </div>
+
+    <h2>Tech Stack</h2>
+    <div class="sketch-box" style="background: #edf5e1;">
+        <p>This extension is built with <strong>zero dependencies</strong> — no React, no npm, no build step. Just clean, vanilla JavaScript.</p>
+        <ul style="list-style: none; padding: 0;">
+            <li>📁 <strong>6 source modules</strong> — cleanly separated by responsibility</li>
+            <li>📝 <strong>~1,200 lines of code</strong> — lean and focused</li>
+            <li>⚙️ <strong>Manifest V3</strong> — the latest Chrome Extension standard</li>
+            <li>🧩 <strong>Content Script Architecture</strong> — injects directly into LinkedIn pages</li>
+            <li>🔍 <strong>Regex-based Date Parser</strong> — extracts "Jan 2020 - Present" style date ranges</li>
+            <li>🧮 <strong>Interval Merging Engine</strong> — deduplicates overlapping employment periods</li>
+            <li>💾 <strong>Chrome Storage API</strong> — caches results so repeat visits are instant</li>
+        </ul>
+    </div>
+
+    <h2>Project Structure</h2>
+    <div class="sketch-box" style="background: #f0f3f4;">
+        <pre style="font-family: 'Courier New', monospace; font-size: 1rem; overflow-x: auto;">
+LinkedInExp/
+├── manifest.json          # Extension config (Manifest V3)
+├── icons/                 # Extension icons (16, 48, 128px)
+├── styles/
+│   └── injected.css       # UI styles injected into LinkedIn
+└── src/
+    ├── content.js         # Main entry point & URL router
+    ├── modules/
+    │   ├── domScraper.js  # HTML fetcher & date extractor
+    │   ├── uiRenderer.js # Injects results into LinkedIn UI
+    │   ├── observer.js   # MutationObserver for SPA navigation
+    │   └── storage.js    # Chrome storage cache layer
+    └── utils/
+        ├── dateParser.js     # Month/year string parser
+        └── intervalEngine.js # Overlap merging algorithm
+        </pre>
+    </div>
+
+    <h2>Get Involved</h2>
+    <div class="sketch-box" style="background: #e8daef;">
+        <p>This is an open-source project and I'd love your help! Here's how you can contribute:</p>
+        <ul style="list-style: none; padding: 0;">
+            <li>⭐ <strong>Star the repo:</strong> <a href="https://github.com/AniketDeshmane/LinkedInExp">github.com/AniketDeshmane/LinkedInExp</a></li>
+            <li>🐛 <strong>Report bugs:</strong> <a href="https://github.com/AniketDeshmane/LinkedInExp/issues">Open an Issue</a></li>
+            <li>💡 <strong>Suggest features:</strong> What would make this more useful for you?</li>
+            <li>🍴 <strong>Fork & PR:</strong> Jump in and build something cool!</li>
+        </ul>
+    </div>
+
+    <div class="sketch-box hero" style="background: #74b9ff;">
+        <h2 style="border: none; color: white;">Ready to try it?</h2>
+        <p style="color: white; font-size: 1.3rem;">Install the extension, visit any LinkedIn profile, and see the magic happen.</p>
+        <a href="https://chromewebstore.google.com/detail/linkedin-experience-calcu/bipolcnnigjfefbcffdpnifdblejlgpo" class="btn" style="background: #ffeaa7; color: #1a1a1a;">⬇️ Install from Chrome Web Store</a>
+    </div>
+
     <hr>
     <footer>
-        <p><small>&copy; 2026 Aniket Deshmane. All rights reserved.</small></p>
+        <p><small>&copy; 2026 Aniket Deshmane. Built with ❤️ and vanilla JS.</small></p>
+        <p><small>
+            <a href="https://github.com/AniketDeshmane/LinkedInExp">GitHub</a> · 
+            <a href="https://chromewebstore.google.com/detail/linkedin-experience-calcu/bipolcnnigjfefbcffdpnifdblejlgpo">Chrome Web Store</a> · 
+            <a href="../support">Privacy Policy</a>
+        </small></p>
     </footer>
     <script>
         if (window.location.href.endsWith('index.html')) {
