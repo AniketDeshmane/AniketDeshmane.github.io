@@ -222,7 +222,7 @@ export class AppConfigService {
       ],
       cta: {
         text: "Download Resume",
-        url: "/assets/Resume.docx"
+        url: "/assets/aniket-deshmane.pdf"
       }
     },
     experience: {
@@ -243,16 +243,37 @@ export class AppConfigService {
           duration: "Nov 2024 - Present",
           location: "Mumbai · Hybrid",
           description: [
-            "Developed and integrated microservices in .NET 8, leveraging Autofac for dependency injection, Quartz Scheduler for internal cache refresh, and FIX protocol integration with the proprietary trading software to enable seamless communication with the FIX engine.",
-            "Implemented asynchronous communication between microservices using Amazon SQS and SNS, ensuring high scalability and reliability.",
-            "Assisted in debugging UI issues, performing root cause analysis, and validating end-to-end test flows to ensure smooth application performance.",
-            "Followed best coding practices and wrote clean, testable, and maintainable code with maximum unit test coverage.",
-            "Worked in a cloud-native environment using AWS, ECS, Linux, SQL, and Splunk for monitoring and deployment."
+            "Developed C# microservices in .NET 8, using Autofac for dependency injection, Quartz Scheduler for internal cache refresh, and FIX protocol integration with proprietary trading software to enable reliable communication with the FIX engine.",
+            "Integrated and stabilized FIX connectivity for electronic trading venues including Bloomberg with dark pool support, MarketAxess, Liquidnet, TradeWeb, and Bonds.com, configuring and validating sessions from development and staging through production go-live.",
+            "Delivered loan and bond settlement message flows to ClearPar and CTM, mapping entity identifiers, supporting multiple trade types, and resolving stuck allocations by synchronizing commitment amounts between the trade blotter and settlement platform.",
+            "Implemented asynchronous messaging between .NET microservices using Amazon SQS and SNS, then improved settlement reliability with deadlock retry logic and self-healing message-bridge recovery for resilient IBM MQ connectivity during broker disconnects.",
+            "Built a React and TypeScript single-page support dashboard for operations teams, providing real-time visibility into trade processing stages and failed trades for triage, deployed as a static application on AWS S3.",
+            "Debugged React and TypeScript UI issues, performed root cause analysis, and validated end-to-end flows to improve application stability.",
+            "Wrote clean, maintainable .NET code with unit test coverage across business-critical service logic.",
+            "Supported cloud-native services across AWS, ECS, Linux, SQL, and Splunk for deployment, monitoring, and production troubleshooting."
           ],
           startDate: new Date("2024-11-01"),
           branchColor: "#10b981",
           current: true,
-          techStack: [".NET 8", "Autofac", "Quartz", "SQS/SNS", "FIX Protocol", "ECS", "AWS", "SQL", "Splunk", "Linux"]
+          techStack: [
+            ".NET 8",
+            "React",
+            "TypeScript",
+            "Autofac",
+            "Quartz",
+            "SQS/SNS",
+            "FIX Protocol",
+            "Bloomberg",
+            "MarketAxess",
+            "TradeWeb",
+            "ClearPar & CTM",
+            "IBM MQ",
+            "AWS",
+            "ECS",
+            "SQL",
+            "Splunk",
+            "Linux"
+          ]
         },
         {
           id: "d4e5f6g7",
@@ -367,6 +388,14 @@ export class AppConfigService {
           skills: [
             { name: "AWS (SQS, SNS, ECS)", level: 90, icon: "lucideCloud" },
             { name: "Azure (Web Apps)", level: 90, icon: "lucideCloud" }
+          ]
+        },
+        {
+          name: "AI Tools",
+          skills: [
+            { name: "Claude", level: 90, icon: "lucideCode" },
+            { name: "Antigravity", level: 90, icon: "lucideCode" },
+            { name: "Microsoft Copilot w/ Power Automate", level: 90, icon: "lucideCode" }
           ]
         }
       ]

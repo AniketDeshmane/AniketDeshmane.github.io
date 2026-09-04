@@ -45,9 +45,9 @@ import { HostListener, Inject, PLATFORM_ID } from '@angular/core';
 
         <!-- Resume Download -->
         <a 
-          href="/assets/Resume.docx" 
+          href="/assets/aniket-deshmane.pdf" 
           target="_blank"
-          download
+          download="aniket-deshmane.pdf"
           class="group flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 rounded-full shadow-elevated hover:shadow-glow hover:-translate-y-1 transition-all duration-300 pointer-events-auto">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:animate-bounce">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
