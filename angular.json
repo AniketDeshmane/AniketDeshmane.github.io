@@ -1,4 +1,4 @@
-﻿{
+{
     "$schema":  "./node_modules/@angular/cli/lib/config/schema.json",
     "version":  1,
     "newProjectRoot":  "projects",
@@ -42,6 +42,11 @@
                                                                                                                   "input":  "src/LinkedInExperienceCalculator",
                                                                                                                   "glob":  "**/*",
                                                                                                                   "output":  "LinkedInExperienceCalculator"
+                                                                                                              },
+                                                                                                              {
+                                                                                                                  "input":  "src/HedgeFundEngineering",
+                                                                                                                  "glob":  "**/*",
+                                                                                                                  "output":  "HedgeFundEngineering"
                                                                                                               },
                                                                                                               "src/google4cf7564f054336e4.html"
                                                                                                           ],
