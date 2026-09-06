@@ -11051,5 +11051,25 @@
 
 
 </div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  
+  // Also find any pre>code block with mermaid syntax and convert it to div.mermaid
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach((block) => {
+      if (block.textContent.trim().startsWith('graph ') || 
+          block.textContent.trim().startsWith('sequenceDiagram') || 
+          block.textContent.trim().startsWith('flowchart ')) {
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = block.textContent;
+        block.parentElement.replaceWith(div);
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
